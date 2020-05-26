@@ -1,13 +1,9 @@
 import cv2
-import discord
 import os
 import pytesseract
-from discord.ext import commands
+from discord.ext.commands import Bot
 
-client = discord.Client()
-# client = commands.Bot(command_prefix='!')
-
-
+bot = Bot(command_prefix='!')
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
@@ -30,21 +26,21 @@ def findingstats(num):
     return 0
 
 
-@client.event
+@bot.event
 async def on_ready():
-    print('We have logged in as {0.user}'.format(client))
+    print('We have logged in as {0.user}'.format(bot))
 
 
-@client.event
+@bot.event
 async def on_message(message):
-    if message.author == client.user:
+    if message.author == bot.user:
         return
 
     if message.content.startswith('hello marleybot'):
         await message.channel.send('Yo!')
 
     if message.content.startswith('wtf'):
-        message.guild.create_text_channel('hi')
+        await message.guild.create_text_channel('hi')
         await message.channel.send('Wow, stay calm')
 
     if message.content.startswith('is anyone on'):
@@ -72,9 +68,12 @@ async def on_message(message):
         os.remove(str(message.author).split('#')[0] + '.png')
 
     # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
+    await bot.process_commands(message)
+
+@bot.command()
+async def startgame(ctx, game):
+    await ctx.guild.create_text_channel(game)
+    await ctx.send('Starting Game')
 
 
-
-print(discord.__version__)
-
-client.run('')
+bot.run('')
