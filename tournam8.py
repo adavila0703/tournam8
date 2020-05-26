@@ -81,7 +81,7 @@ async def on_message(message):
         stats = findingstats(pytesseract.image_to_string(thresh, lang='eng', config='--psm 12', nice=1).split())
         await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
                                    f'\nAssists: {stats[2]} \nDamage: {stats[3]}')
-        os.remove(str(message.author).split('#')[0] + '.png')
+        # os.remove(str(message.author).split('#')[0] + '.png')
 
     # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
     await bot.process_commands(message)
@@ -101,5 +101,5 @@ async def startgame(ctx, game):
 async def sendchannel(ctx, game):
     print()
 
-
+print(get_token())
 bot.run(get_token())
