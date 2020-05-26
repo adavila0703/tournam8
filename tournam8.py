@@ -7,7 +7,12 @@ bot = Bot(command_prefix='!')
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
+def get_token():
+    with open('token.txt', 'r') as g:
+        lines = g.readlines()
+        return lines[0].strip()
 
+# none bot functions
 def findingstats(num):
     storednums = 'First,Second,Third,Fourth,Fifth,Sixth,Seventh,Eighth,Ninth,Tenth,' \
                  'Eleventh,Twelfth,Thirteenth,Fourteenth,Fifteenth,Sixteenth,Seventeenth,' \
@@ -26,6 +31,14 @@ def findingstats(num):
     return 0
 
 
+def checkchannels(channels, check):
+    for c in channels:
+        if str(c) == check:
+            return True
+    return False
+
+
+# bot functions
 @bot.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(bot))
@@ -70,10 +83,20 @@ async def on_message(message):
     # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
     await bot.process_commands(message)
 
+
+# bot commands
 @bot.command()
 async def startgame(ctx, game):
-    await ctx.guild.create_text_channel(game)
-    await ctx.send('Starting Game')
+    if checkchannels(ctx.guild.text_channels, game) == True:
+        await ctx.send('Channel Already Exists')
+    else:
+        await ctx.guild.create_text_channel(game)
+        await ctx.send('Starting Game')
 
 
-bot.run('')
+@bot.command()
+async def sendchannel(ctx, game):
+    print()
+
+
+bot.run(get_token())
