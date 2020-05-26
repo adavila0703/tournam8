@@ -71,6 +71,9 @@ async def on_message(message):
     if message.content.startswith('marleybot is corey op'):
         await message.channel.send('No')
 
+    if message.content.startswith('marleybot'):
+        await message.channel.send('BRB')
+
     if message.attachments:
         await message.attachments[0].save(str(message.author).split('#')[0] + '.png')
         image = cv2.imread(str(message.author).split('#')[0] + '.png', 0)
