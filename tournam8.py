@@ -1,16 +1,19 @@
 import cv2
-import os
 import pytesseract
 from discord.ext.commands import Bot
+from PIL import Image
+import os
 
 bot = Bot(command_prefix='!')
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
+
 def get_token():
     with open('token.txt', 'r') as g:
         lines = g.readlines()
         return lines[0].strip()
+
 
 # none bot functions
 def findingstats(num):
@@ -49,8 +52,8 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if message.content.startswith('hello marleybot'):
-        await message.channel.send('Yo!')
+    if message.content.startswith('hi'):
+        await message.channel.send('boo')
 
     if message.content.startswith('wtf'):
         await message.guild.create_text_channel('hi')
@@ -79,16 +82,19 @@ async def on_message(message):
         image = cv2.imread(str(message.author).split('#')[0] + '.png', 0)
         thresh = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
         stats = findingstats(pytesseract.image_to_string(thresh, lang='eng', config='--psm 12', nice=1).split())
-        await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
-                                   f'\nAssists: {stats[2]} \nDamage: {stats[3]}')
-        # os.remove(str(message.author).split('#')[0] + '.png')
+        try:
+            await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
+                                       f'\nAssists: {stats[2]} \nDamage: {stats[3]}')
+        except:
+            pass
+        os.remove(str(message.author).split('#')[0] + '.png')
 
-    # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
+        # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
     await bot.process_commands(message)
 
 
 # bot commands
-@bot.command()
+@bot.command(options='hello')
 async def startgame(ctx, game):
     if checkchannels(ctx.guild.text_channels, game) == True:
         await ctx.send('Channel Already Exists')
@@ -101,5 +107,5 @@ async def startgame(ctx, game):
 async def sendchannel(ctx, game):
     print()
 
-print(get_token())
+
 bot.run(get_token())
