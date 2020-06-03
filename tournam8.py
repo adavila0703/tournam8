@@ -1,21 +1,19 @@
-import cv2
-import pytesseract
 from discord.ext import commands
 from discord.ext.commands import Bot, has_permissions
-from discord.ext.commands.errors import MissingRequiredArgument
 import discord.utils
 import os
-# from discord import Guild
-# from PIL import Image
-# import requests
-# import json
-# from requests.auth import HTTPBasicAuth
+import cv2
+import pytesseract
+from PIL import Image
+import requests
+import json
+from requests.auth import HTTPBasicAuth
 import time
-import random
 
 bot = Bot(command_prefix='!')
 
 # pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+stopocr = True
 
 bot.remove_command('help')
 
@@ -60,7 +58,6 @@ async def on_ready():
 
 @bot.event
 async def on_message(message):
-    jokes = ['']
 
     if message.author == bot.user:
         return
@@ -83,21 +80,22 @@ async def on_message(message):
     if 'tell me a joke' in message.content.lower():
         print('nothing')
 
-
-
     # OCR
-    # if message.attachments:
-    #     await message.attachments[0].save(str(message.author).split('#')[0] + '.png')
-    #     image = cv2.imread(str(message.author).split('#')[0] + '.png', 0)
-    #     thresh = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
-    #     stats = findingstats(pytesseract.image_to_string(thresh, lang='eng', config='--psm 12', nice=1).split())
-    #     try:
-    #         await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
-    #                                    f'\nAssists: {stats[2]} \nDamage: {stats[3]}')
-    #     except:
-    #         pass
-    #     os.remove(str(message.author).split('#')[0] + '.png')
-    #     # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
+    if message.attachments:
+        if stopocr != True:
+            await message.attachments[0].save(str(message.author).split('#')[0] + '.png')
+            image = cv2.imread(str(message.author).split('#')[0] + '.png', 0)
+            thresh = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
+            stats = findingstats(pytesseract.image_to_string(thresh, lang='eng', config='--psm 12', nice=1).split())
+            try:
+                await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
+                                           f'\nAssists: {stats[2]} \nDamage: {stats[3]}')
+            except:
+                pass
+            os.remove(str(message.author).split('#')[0] + '.png')
+            # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
+        else:
+            pass
     await bot.process_commands(message)
 
 
@@ -143,7 +141,6 @@ async def makescreenshotchannel(ctx, vc_channel, category):
                                                 category=discord.utils.get(ctx.guild.categories, name=category))
             name = str(c).split('#')[0].lower()
             nameout = c.mention
-            pic = discord.File('marley.png')
             text_out = discord.utils.get(ctx.guild.text_channels, name=name)
             await text_out.send(
                 f'Welcome {nameout}! This is the channel where you will be posting your screenshots,'
@@ -259,6 +256,13 @@ async def deletechannels_error(ctx, error):
 #         await ctx.send('Error: You are missing your arguments')
 #     if isinstance(error, commands.CommandInvokeError):
 #         await ctx.send('Error: No channels or category doesnt exist.')
+
+@updatescrimroles.error
+async def updatescrimroles_error(ctx, error):
+    if isinstance(error, commands.MissingRequiredArgument):
+        await ctx.send('Error: You are missing your arguments')
+    if isinstance(error, commands.CommandInvokeError):
+        await ctx.send('Error: Role might not exist.')
 
 
 url = "http://localhost:5000/users"
