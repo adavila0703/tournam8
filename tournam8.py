@@ -116,10 +116,39 @@ async def on_voice_state_update(member, before, after):
 ## BOT COMMANDS
 @bot.command()
 @has_permissions(administrator=True)
-async def test(ctx, message):
-    start_time = time.time()
-    await ctx.send("--- %s seconds ---" % (time.time() - start_time))
-    await ctx.send(message)
+async def testget(ctx):
+    url = "http://localhost:5000/records"
+
+    payload = "{\r\n    \"data\":\r\n    {\r\n    \"type\":\"tourns\", \r\n    \"attributes\":\r\n        {\r\n       " \
+              " \"name\": \"element 4\"\r\n\r\n        }\r\n    }\r\n} "
+    headers = {
+        'Authorization': 'Basic dGl0bzp0aXRv',
+        'Content-Type': 'application/json'
+    }
+
+    response = requests.request("GET", url, headers=headers, data=payload)
+
+    read = json.loads(response.text)
+    data = read['data']
+
+    for d in data:
+        print(d['attributes']['kills'])
+    return None
+
+@bot.command()
+@has_permissions(administrator=True)
+async def testpost(ctx):
+    url = "http://localhost:5000/users"
+
+    payload = "{\r\n    \"data\":\r\n    {\r\n    \"type\":\"user\", \"attributes\":\r\n        {\r\n        " \
+              "\"username\":\"rip\", \r\n        \"discordname\":\"hello\"\r\n\r\n        }\r\n    }\r\n} "
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic dGl0bzp0aXRv'
+    }
+
+    requests.request("POST", url, headers=headers, data=payload)
+    return None
 
 
 @bot.command()
@@ -265,25 +294,6 @@ async def updatescrimroles_error(ctx, error):
         await ctx.send('Error: Role might not exist.')
 
 
-url = "http://localhost:5000/users"
 
-# payload = "{\n    \"data\":\n    {\n    \"type\":\"user\", \"attributes\":\n        {\n
-# \"username\":\"Angel\", \n        \"discordname\":\"\"\n\n        }\n    }\n}"
-payload = "{\n    \"data\":\n    {\n    \"type\":\"user\", \"attributes\":\n        {\n        " \
-          "\"username\":\"Angel\", \n        \"discordname\":\"\"\n\n        }\n    }\n} "
-headers = {
-    'Content-Type': 'application/json',
-    'Authorization': 'Basic dGl0bzp0aXRv',
-    'Authorization': 'Basic dGl0bzp0aXRv',
-    'Content-Type': 'text/plain'
-}
-
-# get json data
-# response = requests.request("GET", url, headers=headers, data=payload)
-# read = json.loads(response.text)
-# data = read['data']
-#
-# for d in data:
-#     print(d['attributes']['username'].lower())
 
 bot.run(get_token())
