@@ -80,7 +80,7 @@ async def on_message(message):
     if 'tell me a joke' in message.content.lower():
         print('nothing')
 
-    # OCR
+# OCR
     if message.attachments:
         if stopocr != True:
             await message.attachments[0].save(str(message.author).split('#')[0] + '.png')
@@ -113,11 +113,49 @@ async def on_voice_state_update(member, before, after):
         pass
 
 
-## BOT COMMANDS
+# BOT COMMANDS
+@bot.command()
+@has_permissions(administrator=True)
+async def disid(ctx, message):
+    print(message.split('!')[1].replace('>', ''))
+
+@bot.command()
+@has_permissions(administrator=True)
+async def getstats(ctx, player):
+    ply = player.split('!')[1].replace('>', '')
+    url = "http://localhost:5000/records"
+
+    payload = "{\r\n    \"data\":\r\n    {\r\n    \"type\":\"user\", \"attributes\":\r\n        {\r\n        " \
+              "\"username\":\"test\", \r\n        \"discordname\":\"test\"\r\n\r\n        }\r\n    }\r\n} "
+    headers = {
+        'Content-Type': 'application/json',
+        'Authorization': 'Basic dGl0bzp0aXRv'
+    }
+
+    filter = '''{"name":"discord_id", "op":"eq", "val":"''' + "{a}".format(a=ply) + '''"}'''
+
+    r = requests.get(url+f"?filter=[{filter}]", auth=HTTPBasicAuth('tito', 'tito'))
+    read = json.loads(r.text)
+    data = read['data']
+    kills = 0
+    assists = 0
+    damage = 0
+
+    for d in data:
+        kills += int(d['attributes']['kills'])
+
+    for d in data:
+        assists += int(d['attributes']['assists'])
+
+    for d in data:
+        damage += int(d['attributes']['damage'])
+
+    await ctx.send('Kills: {a}\nAssists: {b}\nTotal Damage:{c}'.format(a=kills, b=assists, c=damage))
+
 @bot.command()
 @has_permissions(administrator=True)
 async def testget(ctx):
-    url = "http://localhost:5000/records"
+    url = "http://localhost:5000/users"
 
     payload = "{\r\n    \"data\":\r\n    {\r\n    \"type\":\"tourns\", \r\n    \"attributes\":\r\n        {\r\n       " \
               " \"name\": \"element 4\"\r\n\r\n        }\r\n    }\r\n} "
@@ -126,14 +164,21 @@ async def testget(ctx):
         'Content-Type': 'application/json'
     }
 
-    response = requests.request("GET", url, headers=headers, data=payload)
+    #response = requests.request("GET", url, headers=headers, data=payload)
 
-    read = json.loads(response.text)
-    data = read['data']
+    filter = '''{"name":"username", "op":"eq", "val":"marley"}'''
+    r = requests.get(url+f"?filter=[{filter}]", auth=HTTPBasicAuth('tito', 'tito'))
 
-    for d in data:
-        print(d['attributes']['kills'])
-    return None
+    read = json.loads(r.text)
+    # data = read['data']
+
+    # for d in data:
+    #     print(d['attributes']['kills'])
+    # return None
+
+    print(read)
+
+
 
 @bot.command()
 @has_permissions(administrator=True)
