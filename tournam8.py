@@ -12,8 +12,8 @@ import time
 
 bot = Bot(command_prefix='!')
 
-# pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
-stopocr = True
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+stopocr = False
 
 bot.remove_command('help')
 
