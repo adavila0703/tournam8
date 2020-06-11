@@ -18,6 +18,7 @@ During a tournament, players are instructed to take a screenshot of their scores
 To give you more perspective on whats that like. There are about 40 players in a game and there are 6 games played per tournament. That's 240 screenshots per tournament and at an average of 6 characters per screenshots, that around 1440 characters that need to be transferred to an excel sheet.
 
 
+
 ![](pics/logo-element.png)
 ***Element Logo***
 
