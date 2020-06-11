@@ -1,8 +1,16 @@
 # tournam8
 
-[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com)
+ ![](pics/tournam8-logo.png) 
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com) 
 
 [![Generic badge](https://img.shields.io/badge/Bot_Status-Live-Green.svg)](https://shields.io/)
+
+
+
+
+
+
 
 # Short Version
 
@@ -24,7 +32,9 @@ To give you more perspective on whats that like. There are about 40 players in a
 
 Here is an example of the OCR. The system extracts the data from a screenshot and sends the information to a database through an my API.
 
+
 ![](pics/ocr-example.gif)
+
 
 
 # API
