@@ -302,15 +302,30 @@ async def makescreenshotchannel(ctx, vc_channel, category):
     await ctx.send(f'!makescreenshotchannel Completed! - Execution Time: {time.time() - start_time}s')
 
 
-# command to delete channels in a given category
+# OLD command to delete channels in a given category
 @bot.command()
 @commands.has_permissions(administrator=True)
-async def deletechannels(ctx, category):
+async def old_deletechannels(ctx, category):
+    file = open('players.txt', 'r')
     await ctx.send('Executing !deletechannels')
     start_time = time.time()
     category = discord.utils.get(ctx.guild.categories, name=category)
     for c in category.text_channels:
         await c.delete()
+    await ctx.send(f'!deletechannels Completed! - Execution Time: {time.time() - start_time}s')
+
+
+# NEW command to delete channels in a given category
+@bot.command()
+@commands.has_permissions(administrator=True)
+async def deletechannels(ctx):
+    file = open('players.txt', 'r')
+    await ctx.send('Executing !deletechannels')
+    start_time = time.time()
+    for a in file.readlines():
+        channame = a.strip().replace('\n', '')
+        channel = discord.utils.get(ctx.guild.text_channels, name=channame)
+        await channel.delete()
     await ctx.send(f'!deletechannels Completed! - Execution Time: {time.time() - start_time}s')
 
 
@@ -331,7 +346,7 @@ async def giverole(ctx, role_name, vc_channel):
 # command to update a role in a given voice chat
 @bot.command()
 @has_permissions(manage_roles=True)
-async def updatescrimroles(ctx, vc_channel):
+async def old_updatescrimroles(ctx, vc_channel):
     await ctx.send('Executing !updatescrimroles')
     start_time = time.time()
     fetch = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
@@ -352,6 +367,19 @@ async def updatescrimroles(ctx, vc_channel):
                 await u.remove_roles(s1)
             else:
                 await u.add_roles(s1)
+    await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
+
+
+# command to update a role in a given voice chat
+@bot.command()
+@has_permissions(manage_roles=True)
+async def old_updatescrimroles(ctx, vc_channel):
+    await ctx.send('Executing !updatescrimroles')
+    start_time = time.time()
+    fetch = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
+    user = fetch.members
+    for u in user:
+        print()
     await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
 
