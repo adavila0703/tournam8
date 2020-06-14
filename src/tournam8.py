@@ -8,6 +8,7 @@ import requests
 import json
 from requests.auth import HTTPBasicAuth
 import time
+import random
 
 '''Global variables'''
 bot = Bot(command_prefix='!')
@@ -15,9 +16,10 @@ bot.remove_command('help')
 
 tournyname = ''
 tournystart = False
-
+marladuelwins = 0
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+
 
 def get_token():
     with open('token.txt', 'r') as g:
@@ -64,10 +66,14 @@ async def on_ready():
 @bot.event
 async def on_message(message):
     global gamecount
+    elduel = ['Fire', 'Toxic', 'Wind', 'Ice', 'Lightning']
 
     # regular discord message fun
     if message.author == bot.user:
         return
+
+    if 'test' in message.content.lower():
+        pass
 
     if 'marla' in message.content.lower():
         await message.channel.send('Yes?')
@@ -75,8 +81,11 @@ async def on_message(message):
     if 'best rune' in message.content.lower():
         await message.channel.send('Blink...')
 
-    if 'blink' in message.content.lower():
+    if 'blink' in message.content.lower() or 'blinked' in message.content.lower():
         await message.channel.send('RIP Blink :(')
+
+    if 'pink marla' in message.content.lower() or 'pinkmarla' in message.content.lower():
+        await message.channel.send('Pink Marla is an impostor!')
 
     if 'marla who created you?' in message.content.lower() or 'marla who created you' in message.content.lower() \
             or 'who created marla' in message.content.lower() or 'who made marla' in message.content.lower() \
@@ -124,6 +133,130 @@ async def on_voice_state_update(member, before, after):
 
 
 ''' Bot commands '''
+
+
+# element duel game!
+@bot.command()
+async def duel(ctx, choice):
+    global marladuelwins
+    elduel = ['fire', 'toxic', 'wind', 'ice', 'lightning']
+    marlapick = ''
+    newwins = 0
+    file = open('duelstats.txt', 'r+')
+    if choice.lower() == 'fire' or choice.lower() == 'toxic' or choice.lower() == 'wind' or choice.lower() == 'ice' or \
+            choice.lower() == 'lightning':
+        marlapick = random.choice(elduel)
+        await ctx.send(f"I choose {marlapick}!")
+        if marlapick == 'fire':
+            if choice.lower() == 'ice' or choice.lower() == 'toxic':
+                marladuelwins += 1
+                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                return None
+            elif choice.lower() == 'fire':
+                await ctx.send(f'Draw!')
+                return None
+            else:
+                for line in file.readlines():
+                    if line.strip().split()[0] == str(ctx.author):
+                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
+                        newwins = str(int(line.strip().split()[1]) + 1)
+                        with open('wtf.txt', 'r+') as f:
+                            f.writelines(newstat)
+                        await ctx.send(
+                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                        return None
+                    else:
+                        file.writelines(ctx.author + ' 1')
+
+        elif marlapick == 'toxic':
+            if choice.lower() == 'wind' or choice.lower() == 'lightning':
+                marladuelwins += 1
+                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                return None
+            elif choice.lower() == 'toxic':
+                await ctx.send(f'Draw!')
+                return None
+            else:
+                for line in file.readlines():
+                    if line.strip().split()[0] == str(ctx.author):
+                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
+                        newwins = str(int(line.strip().split()[1]) + 1)
+                        with open('wtf.txt', 'r+') as f:
+                            f.writelines(newstat)
+                        await ctx.send(
+                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                        return None
+                    else:
+                        file.writelines(ctx.author + ' 1')
+
+        elif marlapick == 'wind':
+            if choice.lower() == 'lightning' or choice.lower() == 'fire':
+                marladuelwins += 1
+                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                return None
+            elif choice.lower() == 'wind':
+                await ctx.send(f'Draw!')
+                return None
+            else:
+                for line in file.readlines():
+                    if line.strip().split()[0] == str(ctx.author):
+                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
+                        newwins = str(int(line.strip().split()[1]) + 1)
+                        with open('wtf.txt', 'r+') as f:
+                            f.writelines(newstat)
+                        await ctx.send(
+                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                        return None
+                    else:
+                        file.writelines(ctx.author + ' 1')
+
+        elif marlapick == 'ice':
+            if choice.lower() == 'toxic' or choice.lower() == 'wind':
+                marladuelwins += 1
+                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                return None
+            elif choice.lower() == 'ice':
+                await ctx.send(f'Draw!')
+                return None
+            else:
+                for line in file.readlines():
+                    if line.strip().split()[0] == str(ctx.author):
+                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
+                        newwins = str(int(line.strip().split()[1]) + 1)
+                        with open('wtf.txt', 'r+') as f:
+                            f.writelines(newstat)
+                        await ctx.send(
+                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                        return None
+                    else:
+                        file.writelines(ctx.author + ' 1')
+
+
+        elif marlapick == 'lightning':
+            if choice.lower() == 'fire' or choice.lower() == 'ice':
+                marladuelwins += 1
+                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                return None
+            elif choice.lower() == 'lightning':
+                await ctx.send(f'Draw!')
+                return None
+            else:
+                for line in file.readlines():
+                    if line.strip().split()[0] == str(ctx.author):
+                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
+                        newwins = str(int(line.strip().split()[1]) + 1)
+                        with open('wtf.txt', 'r+') as f:
+                            f.writelines(newstat)
+                        await ctx.send(
+                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                        return None
+                    else:
+                        file.writelines(ctx.author + ' 1')
+
+    elif choice.lower() == 'stone':
+        await ctx.send('Stone beats everything and it is too easy to use, choose a different gauntlet!')
+    else:
+        await ctx.send('Not a proper gauntlet.')
 
 
 # testing command
@@ -287,18 +420,22 @@ async def makescreenshotchannel(ctx, vc_channel, category):
             file.writelines(name + '\n')
             nameout = c.mention
             text_out = discord.utils.get(ctx.guild.text_channels, name=name)
-            await text_out.send(
-                f'Welcome {nameout}! This is the channel where you will be posting your screenshots,'
-                f'dont forget!\n\nOne of my major features is the ability to read the'
-                f' information from your screenshot, make sure you get a good picture of your stats'
-                f' after your game, the better the picture, the more accurate I will be!'
-                f'\n\nBelow is an and example of the screen you need to capture after your '
-                f'Spellbreak '
-                f'match!\n\nGood luck today Breaker!\n\n -Marla')
-            await text_out.send(file=discord.File('marley.png'))
-            await text_out.send('Tip: ALT + PRINTSCREEN will take a picture of the monitor your mouse is currently'
-                                'active on. \n\nCTL + v into the discord message will send the picture you just '
-                                'took.')
+            try:
+                await text_out.send(
+                    f'Welcome {nameout}! This is the channel where you will be posting your screenshots,'
+                    f'dont forget!\n\nOne of my major features is the ability to read the'
+                    f' information from your screenshot, make sure you get a good picture of your stats'
+                    f' after your game, the better the picture, the more accurate I will be!'
+                    f'\n\nBelow is an and example of the screen you need to capture after your '
+                    f'Spellbreak '
+                    f'match!\n\nGood luck today Breaker!\n\n -Marla')
+                await text_out.send(file=discord.File('marley.png'))
+                await text_out.send('Tip: ALT + PRINTSCREEN will take a picture of the monitor your mouse is currently'
+                                    'active on. \n\nCTL + v into the discord message will send the picture you just '
+                                    'took.')
+            except AttributeError:
+                await ctx.send('Cant accept special characters a players name.')
+                pass
     await ctx.send(f'!makescreenshotchannel Completed! - Execution Time: {time.time() - start_time}s')
 
 
@@ -346,7 +483,7 @@ async def giverole(ctx, role_name, vc_channel):
 # command to update a role in a given voice chat
 @bot.command()
 @has_permissions(manage_roles=True)
-async def old_updatescrimroles(ctx, vc_channel):
+async def updatescrimroles(ctx, vc_channel):
     await ctx.send('Executing !updatescrimroles')
     start_time = time.time()
     fetch = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
@@ -356,30 +493,49 @@ async def old_updatescrimroles(ctx, vc_channel):
     s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
     for u in user:
         for r in u.roles:
-            if r == s1:
-                await u.add_roles(s2)
-                await u.remove_roles(s1)
-            elif r == s2:
+            if r == s2:
                 await u.add_roles(s3)
-                await u.remove_roles(s2)
-                await u.remove_roles(s1)
-            elif r == s3:
-                await u.remove_roles(s1)
+            elif r == s1:
+                await u.add_roles(s2)
             else:
                 await u.add_roles(s1)
+
+            # if r == s1:
+            #     await u.add_roles(s2)
+            #     await u.remove_roles(s1)
+            # elif r == s2:
+            #     await u.add_roles(s3)
+            #     await u.remove_roles(s2)
+            #     await u.remove_roles(s1)
+            # elif r == s3:
+            #     await u.remove_roles(s1)
+            # else:
+            #     await u.add_roles(s1)
     await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
 
 # command to update a role in a given voice chat
 @bot.command()
 @has_permissions(manage_roles=True)
-async def old_updatescrimroles(ctx, vc_channel):
+async def new_updatescrimroles(ctx, vc_channel):
     await ctx.send('Executing !updatescrimroles')
     start_time = time.time()
+    s1file = open('scrimmed/scrimmed1.txt', 'r+')
+    s2file = open('scrimmed/scrimmed2.txt', 'r')
+    s3file = open('scrimmed/scrimmed3.txt', 'r')
+    s1 = discord.utils.get(ctx.guild.roles, name='Scrimmed 1x')
+    s2 = discord.utils.get(ctx.guild.roles, name='Scrimmed 2x')
+    s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
+
     fetch = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
     user = fetch.members
     for u in user:
-        print()
+        for s in s1file.readlines():
+            if str(u) == s:
+                print('in')
+            else:
+                s1file.writelines(u)
+
     await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
 
@@ -428,7 +584,8 @@ async def makescreenshotchannel_error(ctx, error):
     if isinstance(error, commands.MissingRequiredArgument):
         await ctx.send('Error: You are missing your arguments')
     if isinstance(error, commands.CommandInvokeError):
-        await ctx.send('Error: No members in the channel or channel doesnt exist.')
+        await ctx.send('Error: -No users in the channel\n -Category or channel doesnt exist\n '
+                       '-Bot doesnt have permissions')
 
 
 @deletechannels.error
