@@ -9,6 +9,7 @@ import json
 from requests.auth import HTTPBasicAuth
 import time
 import random
+from openpyxl import load_workbook
 
 '''Global variables'''
 bot = Bot(command_prefix='!')
@@ -93,6 +94,11 @@ async def on_message(message):
             or 'marla who made you?' in message.content.lower() or 'marla who made you' in message.content.lower():
         await message.channel.send('I was created by marley-EE!')
 
+    if 'where is marley' in message.content.lower() or 'where is marley-ee' in message.content.lower() \
+            or 'wheres marley' in message.content.lower() or "where's marley" in message.content.lower() \
+            or 'wheres marley-ee' in message.content.lower() or "where's marley-ee" in message.content.lower():
+        await message.channel.send('marley-EE is at the grocery store...')
+
     if 'tell me a joke' in message.content.lower():
         print('nothing')
 
@@ -138,120 +144,176 @@ async def on_voice_state_update(member, before, after):
 # element duel game!
 @bot.command()
 async def duel(ctx, choice):
-    global marladuelwins
     elduel = ['fire', 'toxic', 'wind', 'ice', 'lightning']
-    marlapick = ''
-    newwins = 0
-    file = open('duelstats.txt', 'r+')
+    lb = load_workbook(filename='duelstats.xlsx')
+    ws = lb.active
+    sheet_ranges = lb['Sheet']
+    count = 1
+    marlawins = 0
+
     if choice.lower() == 'fire' or choice.lower() == 'toxic' or choice.lower() == 'wind' or choice.lower() == 'ice' or \
             choice.lower() == 'lightning':
         marlapick = random.choice(elduel)
         await ctx.send(f"I choose {marlapick}!")
+
         if marlapick == 'fire':
             if choice.lower() == 'ice' or choice.lower() == 'toxic':
-                marladuelwins += 1
-                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == 'Marla':
+                        sheet_ranges[f'B{count}'].value += 1
+                        marlawins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
+                    else:
+                        pass
+                await ctx.send(f'I win! {marlapick.capitalize()} beats {choice.capitalize()}. Marla wins: {marlawins}')
                 return None
             elif choice.lower() == 'fire':
                 await ctx.send(f'Draw!')
                 return None
             else:
-                for line in file.readlines():
-                    if line.strip().split()[0] == str(ctx.author):
-                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
-                        newwins = str(int(line.strip().split()[1]) + 1)
-                        with open('wtf.txt', 'r+') as f:
-                            f.writelines(newstat)
-                        await ctx.send(
-                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == str(ctx.author):
+                        sheet_ranges[f'B{count}'].value += 1
+                        yourwins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
+                        await ctx.send(f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
                         return None
                     else:
-                        file.writelines(ctx.author + ' 1')
+                        pass
+                    count += 1
+                ws[f'A{count}'] = str(ctx.author)
+                ws[f'B{count}'] = 0
+                yourwins = sheet_ranges[f'B{count}'].value
+                lb.save('duelstats.xlsx')
+                await ctx.send(f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
 
         elif marlapick == 'toxic':
             if choice.lower() == 'wind' or choice.lower() == 'lightning':
-                marladuelwins += 1
-                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == 'Marla':
+                        sheet_ranges[f'B{count}'].value += 1
+                        marlawins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
+                    else:
+                        pass
+                await ctx.send(f'I win! {marlapick.capitalize()} beats {choice.capitalize()}. Marla wins: {marlawins}')
                 return None
             elif choice.lower() == 'toxic':
                 await ctx.send(f'Draw!')
                 return None
             else:
-                for line in file.readlines():
-                    if line.strip().split()[0] == str(ctx.author):
-                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
-                        newwins = str(int(line.strip().split()[1]) + 1)
-                        with open('wtf.txt', 'r+') as f:
-                            f.writelines(newstat)
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == str(ctx.author):
+                        sheet_ranges[f'B{count}'].value += 1
+                        yourwins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
                         await ctx.send(
-                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                            f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
                         return None
                     else:
-                        file.writelines(ctx.author + ' 1')
+                        pass
+                    count += 1
+                ws[f'A{count}'] = str(ctx.author)
+                ws[f'B{count}'] = 0
+                yourwins = sheet_ranges[f'B{count}'].value
+                lb.save('duelstats.xlsx')
+                await ctx.send(f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
 
         elif marlapick == 'wind':
             if choice.lower() == 'lightning' or choice.lower() == 'fire':
-                marladuelwins += 1
-                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == 'Marla':
+                        sheet_ranges[f'B{count}'].value += 1
+                        marlawins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
+                    else:
+                        pass
+                await ctx.send(f'I win! {marlapick.capitalize()} beats {choice.capitalize()}. Marla wins: {marlawins}')
                 return None
             elif choice.lower() == 'wind':
                 await ctx.send(f'Draw!')
                 return None
             else:
-                for line in file.readlines():
-                    if line.strip().split()[0] == str(ctx.author):
-                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
-                        newwins = str(int(line.strip().split()[1]) + 1)
-                        with open('wtf.txt', 'r+') as f:
-                            f.writelines(newstat)
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == str(ctx.author):
+                        sheet_ranges[f'B{count}'].value += 1
+                        yourwins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
                         await ctx.send(
-                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                            f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
                         return None
                     else:
-                        file.writelines(ctx.author + ' 1')
+                        pass
+                    count += 1
+                ws[f'A{count}'] = str(ctx.author)
+                ws[f'B{count}'] = 0
+                yourwins = sheet_ranges[f'B{count}'].value
+                lb.save('duelstats.xlsx')
+                await ctx.send(f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
 
         elif marlapick == 'ice':
             if choice.lower() == 'toxic' or choice.lower() == 'wind':
-                marladuelwins += 1
-                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == 'Marla':
+                        sheet_ranges[f'B{count}'].value += 1
+                        marlawins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
+                    else:
+                        pass
+                await ctx.send(f'I win! {marlapick.capitalize()} beats {choice.capitalize()}. Marla wins: {marlawins}')
                 return None
             elif choice.lower() == 'ice':
                 await ctx.send(f'Draw!')
                 return None
             else:
-                for line in file.readlines():
-                    if line.strip().split()[0] == str(ctx.author):
-                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
-                        newwins = str(int(line.strip().split()[1]) + 1)
-                        with open('wtf.txt', 'r+') as f:
-                            f.writelines(newstat)
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == str(ctx.author):
+                        sheet_ranges[f'B{count}'].value += 1
+                        yourwins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
                         await ctx.send(
-                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                            f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
                         return None
                     else:
-                        file.writelines(ctx.author + ' 1')
-
+                        pass
+                    count += 1
+                ws[f'A{count}'] = str(ctx.author)
+                ws[f'B{count}'] = 0
+                yourwins = sheet_ranges[f'B{count}'].value
+                lb.save('duelstats.xlsx')
+                await ctx.send(f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
 
         elif marlapick == 'lightning':
             if choice.lower() == 'fire' or choice.lower() == 'ice':
-                marladuelwins += 1
-                await ctx.send(f'Marla wins! {marlapick} beats {choice.lower()}. Marla Wins:{marladuelwins}')
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == 'Marla':
+                        sheet_ranges[f'B{count}'].value += 1
+                        marlawins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
+                    else:
+                        pass
+                await ctx.send(f'I win! {marlapick.capitalize()} beats {choice.capitalize()}. Marla wins: {marlawins}')
                 return None
             elif choice.lower() == 'lightning':
                 await ctx.send(f'Draw!')
                 return None
             else:
-                for line in file.readlines():
-                    if line.strip().split()[0] == str(ctx.author):
-                        newstat = line.strip().split()[0] + " " + str(int(line.strip().split()[1]) + 1)
-                        newwins = str(int(line.strip().split()[1]) + 1)
-                        with open('wtf.txt', 'r+') as f:
-                            f.writelines(newstat)
+                for row in ws.iter_rows(values_only=True):
+                    if row[0] == str(ctx.author):
+                        sheet_ranges[f'B{count}'].value += 1
+                        yourwins = sheet_ranges[f'B{count}'].value
+                        lb.save('duelstats.xlsx')
                         await ctx.send(
-                            f'{ctx.author} wins! {choice.lower()} beats {marlapick}. {ctx.author} has {newwins}')
+                            f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
                         return None
                     else:
-                        file.writelines(ctx.author + ' 1')
+                        pass
+                    count += 1
+                ws[f'A{count}'] = str(ctx.author)
+                ws[f'B{count}'] = 0
+                yourwins = sheet_ranges[f'B{count}'].value
+                lb.save('duelstats.xlsx')
+                await ctx.send(f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
 
     elif choice.lower() == 'stone':
         await ctx.send('Stone beats everything and it is too easy to use, choose a different gauntlet!')
