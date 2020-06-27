@@ -1,3 +1,4 @@
+from discord import ChannelType
 from discord.ext import commands
 from discord.ext.commands import Bot, has_permissions, CommandNotFound
 import discord.utils
@@ -324,7 +325,7 @@ async def duel(ctx, choice):
 # testing command
 @bot.command()
 @has_permissions(administrator=True)
-async def test(ctx):
+async def testingpost(ctx):
     ply = ctx.author.id
     print(ply)
     url = "http://localhost:5000/records"
@@ -541,11 +542,83 @@ async def giverole(ctx, role_name, vc_channel):
         await u.add_roles(role)
     await ctx.send(f'!giverole Completed! - Execution Time: {time.time() - start_time}s')
 
+# global functions mean for scrim role function
+
+def check_s1(check):
+    lb = load_workbook(filename='scrimrole.xlsx')
+    ws = lb.active
+    count = 0
+    for row in ws.iter_rows(values_only=True):
+        if row[0] == str(check):
+            lb.save('scrimrole.xlsx')
+            return True
+        else:
+            pass
+        count += 1
+    ws[f'A{count}'] = str(check)
+    lb.save('scrimrole.xlsx')
+    return False
+
+def check_s2(check):
+    lb = load_workbook(filename='scrimrole.xlsx')
+    ws = lb.active
+    count = 0
+    for row in ws.iter_rows(values_only=True):
+        if row[1] == str(check):
+            lb.save('scrimrole.xlsx')
+            return True
+        else:
+            pass
+        count += 1
+    ws[f'B{count}'] = str(check)
+    lb.save('scrimrole.xlsx')
+    return False
+
+def check_s3(check):
+    lb = load_workbook(filename='scrimrole.xlsx')
+    ws = lb.active
+    count = 0
+    for row in ws.iter_rows(values_only=True):
+        if row[2] == str(check):
+            lb.save('scrimrole.xlsx')
+            return True
+        else:
+            pass
+        count += 1
+    ws[f'C{count}'] = str(check)
+    lb.save('scrimrole.xlsx')
+    return False
+
+# rando
+@bot.command()
+@has_permissions(administrator=True)
+async def updatescrimroles(ctx):
+    await ctx.send('Executing !updatescrimroles')
+    start_time = time.time()
+    channels = ctx.guild.voice_channels
+    s1 = discord.utils.get(ctx.guild.roles, name='Scrimmed 1x')
+    s2 = discord.utils.get(ctx.guild.roles, name='Scrimmed 2x')
+    s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
+
+    for c in channels:
+        for a in c.members:
+            if check_s1(a) == False:
+                await a.add_roles(s1)
+            elif check_s2(a) == False:
+                await a.add_roles(s2)
+                await a.remove_roles(s1)
+            elif check_s3(a) == False:
+                await a.add_roles(s3)
+                await a.remove_roles(s2)
+            else:
+                pass
+
+    await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
 # command to update a role in a given voice chat
 @bot.command()
 @has_permissions(manage_roles=True)
-async def updatescrimroles(ctx, vc_channel):
+async def old_updatescrimroles(ctx, vc_channel):
     await ctx.send('Executing !updatescrimroles')
     start_time = time.time()
     fetch = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
@@ -562,49 +635,54 @@ async def updatescrimroles(ctx, vc_channel):
             else:
                 await u.add_roles(s1)
 
-            # if r == s1:
-            #     await u.add_roles(s2)
-            #     await u.remove_roles(s1)
-            # elif r == s2:
-            #     await u.add_roles(s3)
-            #     await u.remove_roles(s2)
-            #     await u.remove_roles(s1)
-            # elif r == s3:
-            #     await u.remove_roles(s1)
-            # else:
-            #     await u.add_roles(s1)
     await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
-
-# command to update a role in a given voice chat
 @bot.command()
-@has_permissions(manage_roles=True)
-async def new_updatescrimroles(ctx, vc_channel):
-    await ctx.send('Executing !updatescrimroles')
+@has_permissions(administrator=True)
+async def removeallscrimroles(ctx):
+    await ctx.send('Executing !removeallscrimroles')
     start_time = time.time()
-    s1file = open('scrimmed/scrimmed1.txt', 'r+')
-    s2file = open('scrimmed/scrimmed2.txt', 'r')
-    s3file = open('scrimmed/scrimmed3.txt', 'r')
+    lb = load_workbook(filename='scrimrole.xlsx')
+    ws = lb.active
     s1 = discord.utils.get(ctx.guild.roles, name='Scrimmed 1x')
     s2 = discord.utils.get(ctx.guild.roles, name='Scrimmed 2x')
     s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
+    count = 0
+    for row in ws.iter_rows(values_only=True):
+        try:
+            user = discord.utils.get(ctx.guild.members, name=str(row[2].split('#')[0]))
+            await user.remove_roles(s3)
+        except AttributeError:
+            pass
+    for row in ws.iter_rows(values_only=True):
+        try:
+            user = discord.utils.get(ctx.guild.members, name=str(row[1].split('#')[0]))
+            await user.remove_roles(s2)
+        except AttributeError:
+            pass
+    for row in ws.iter_rows(values_only=True):
+        try:
+            user = discord.utils.get(ctx.guild.members, name=str(row[0].split('#')[0]))
+            await user.remove_roles(s1)
+        except AttributeError:
+            pass
 
-    fetch = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
-    user = fetch.members
-    for u in user:
-        for s in s1file.readlines():
-            if str(u) == s:
-                print('in')
-            else:
-                s1file.writelines(u)
+    for r in range(1, 250):
+        ws[f'A{r}'] = ''
+        ws[f'B{r}'] = ''
+        ws[f'C{r}'] = ''
 
-    await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
+    ws[f'A1'] = 'null'
+    ws[f'B1'] = 'null'
+    ws[f'C1'] = 'null'
+    lb.save('scrimrole.xlsx')
+    await ctx.send(f'!removeallscrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
 
 # command to mass remove a specific role to all users in the discord
 @bot.command()
 @has_permissions(administrator=True)
-async def removeallscrimroles(ctx):
+async def old_removeallscrimroles(ctx):
     await ctx.send('Executing !removeallscrimroles')
     start_time = time.time()
     fetch = ctx.guild.members
@@ -632,7 +710,7 @@ async def help(member):
                       "-!deletechannels(category) - Deletes all text channels in a selected category.\n\n"
                       "-!giverole(role_name, vc_channel) - Give everyone in a specified voice chat a role of "
                       "choice.\n\n "
-                      "-!updatescrimroles(vc_channel) - Gives a user the 'scrimmed role'(x1, x2, x3) Example: If they "
+                      "-!updatescrimroles - Gives a user the 'scrim role'(x1, x2, x3) Example: If they "
                       "have x1 and you run the function, then x1 will be deleted and x2 will be added.\n\n"
                       "-!removeallscrimroles - Removes all scrim roles from everyone who owns the role.\n\n"
                       "** Marla bot was created by marley-EE **```")
