@@ -542,51 +542,61 @@ async def giverole(ctx, role_name, vc_channel):
         await u.add_roles(role)
     await ctx.send(f'!giverole Completed! - Execution Time: {time.time() - start_time}s')
 
+@bot.command()
+@has_permissions(manage_roles=True)
+async def test(ctx):
+    lb = load_workbook(filename='scrimrole.xlsx')
+    ws = lb.active
+    print(ws['A1'].value)
+
 # global functions mean for scrim role function
 
 def check_s1(check):
     lb = load_workbook(filename='scrimrole.xlsx')
     ws = lb.active
-    count = 0
+    count = 1
     for row in ws.iter_rows(values_only=True):
-        if row[0] == str(check):
-            lb.save('scrimrole.xlsx')
+        if str(row[0]) == str(check):
+            lb.close()
             return True
         else:
             pass
         count += 1
     ws[f'A{count}'] = str(check)
     lb.save('scrimrole.xlsx')
+    lb.close()
     return False
 
 def check_s2(check):
     lb = load_workbook(filename='scrimrole.xlsx')
     ws = lb.active
-    count = 0
+    count = 1
     for row in ws.iter_rows(values_only=True):
         if row[1] == str(check):
-            lb.save('scrimrole.xlsx')
+            lb.close()
             return True
         else:
             pass
         count += 1
     ws[f'B{count}'] = str(check)
     lb.save('scrimrole.xlsx')
+    lb.close()
     return False
 
 def check_s3(check):
     lb = load_workbook(filename='scrimrole.xlsx')
     ws = lb.active
-    count = 0
+    count = 1
     for row in ws.iter_rows(values_only=True):
         if row[2] == str(check):
-            lb.save('scrimrole.xlsx')
+            lb.close()
             return True
         else:
             pass
         count += 1
     ws[f'C{count}'] = str(check)
     lb.save('scrimrole.xlsx')
+    lb.close()
     return False
 
 # rando
@@ -647,7 +657,7 @@ async def removeallscrimroles(ctx):
     s1 = discord.utils.get(ctx.guild.roles, name='Scrimmed 1x')
     s2 = discord.utils.get(ctx.guild.roles, name='Scrimmed 2x')
     s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
-    count = 0
+    count = 1
     for row in ws.iter_rows(values_only=True):
         try:
             user = discord.utils.get(ctx.guild.members, name=str(row[2].split('#')[0]))
@@ -667,10 +677,11 @@ async def removeallscrimroles(ctx):
         except AttributeError:
             pass
 
-    for r in range(1, 250):
-        ws[f'A{r}'] = ''
-        ws[f'B{r}'] = ''
-        ws[f'C{r}'] = ''
+    for row in ws.iter_rows(values_only=True):
+        ws[f'A{count}'] = None
+        ws[f'B{count}'] = None
+        ws[f'C{count}'] = None
+        count += 1
 
     ws[f'A1'] = 'null'
     ws[f'B1'] = 'null'
