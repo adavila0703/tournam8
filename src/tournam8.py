@@ -118,14 +118,14 @@ async def on_message(message):
                 url = f"http://{out[2].strip()}:{out[3].strip()}/records"
 
                 payload = "{\r\n    \"data\": {\r\n        \"type\": \"record\",\r\n        \"attributes\": {\r\n     " \
-                          "       \"kills\": {k},\r\n            \"damage\": 2000,\r\n            \"place\": 5," \
+                          f"       \"kills\": {500},\r\n            \"damage\": 2000,\r\n            \"place\": 5," \
                           "\r\n            \"assists\": 3,\r\n            \"username\": \"marley-ee\",\r\n            " \
                           "\"game\": \"Game 1\",\r\n            \"discord_id\": 223265725161144320,\r\n            " \
                           "\"scrimy_name\": \"\",\r\n            \"tourny_name\": \"Element 1\",\r\n            " \
-                          "\"qualy_name\": \"\",\r\n            \"score\": 343\r\n        }\r\n    }\r\n} ".format(k=34)
+                          "\"qualy_name\": \"\",\r\n            \"score\": 343\r\n        }\r\n    }\r\n} "
 
                 headers = {
-                    'Authorization': 'Basic ',
+                    'Authorization': f'Basic {out[4].strip()}',
                     'Content-Type': 'application/json'
                 }
 
