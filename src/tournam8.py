@@ -17,7 +17,7 @@ bot = Bot(command_prefix='!')
 bot.remove_command('help')
 
 tournyname = ''
-tournystart = False
+tournystart = True
 marladuelwins = 0
 
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
@@ -107,14 +107,37 @@ async def on_message(message):
     if message.attachments:
         if tournystart == True:
             if str(message.channel) == str(message.author).split('#')[0].lower():
+                print('hi')
                 await message.attachments[0].save(str(message.author).split('#')[0] + '.png')
                 image = cv2.imread(str(message.author).split('#')[0] + '.png', 0)
                 thresh = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
                 stats = findingstats(pytesseract.image_to_string(thresh, lang='eng', config='--psm 12', nice=1).split())
+
+                file = open('element-info.txt', 'r')
+                out = file.readlines()
+                url = f"http://{out[2].strip()}:{out[3].strip()}/records"
+
+                payload = "{\r\n    \"data\": {\r\n        \"type\": \"record\",\r\n        \"attributes\": {\r\n     " \
+                          "       \"kills\": {k},\r\n            \"damage\": 2000,\r\n            \"place\": 5," \
+                          "\r\n            \"assists\": 3,\r\n            \"username\": \"marley-ee\",\r\n            " \
+                          "\"game\": \"Game 1\",\r\n            \"discord_id\": 223265725161144320,\r\n            " \
+                          "\"scrimy_name\": \"\",\r\n            \"tourny_name\": \"Element 1\",\r\n            " \
+                          "\"qualy_name\": \"\",\r\n            \"score\": 343\r\n        }\r\n    }\r\n} ".format(k=34)
+
+                headers = {
+                    'Authorization': 'Basic ',
+                    'Content-Type': 'application/json'
+                }
+
+                response = requests.request("POST", url, headers=headers, data=payload)
+
+                print(response.text.encode('utf8'))
                 try:
                     await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
                                                f'\nAssists: {stats[2]} \nDamage: {stats[3]}')
+
                 except:
+                    print('except')
                     pass
                 os.remove(str(message.author).split('#')[0] + '.png')
                 # if str(message.attachments).split()[3].split("'")[1].endswith('.png'):
@@ -177,7 +200,8 @@ async def duel(ctx, choice):
                         sheet_ranges[f'B{count}'].value += 1
                         yourwins = sheet_ranges[f'B{count}'].value
                         lb.save('duelstats.xlsx')
-                        await ctx.send(f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
+                        await ctx.send(
+                            f'You win! {choice.capitalize()} beats {marlapick.capitalize()}. Your wins: {yourwins}')
                         return None
                     else:
                         pass
@@ -363,18 +387,14 @@ async def testingpost(ctx):
 @has_permissions(administrator=True)
 async def getstats(ctx, player):
     ply = player.split('!')[1].replace('>', '')
-    url = "http://localhost:5000/records"
-
-    payload = "{\r\n    \"data\":\r\n    {\r\n    \"type\":\"user\", \"attributes\":\r\n        {\r\n        " \
-              "\"username\":\"test\", \r\n        \"discordname\":\"test\"\r\n\r\n        }\r\n    }\r\n} "
-    headers = {
-        'Content-Type': 'application/json',
-        'Authorization': 'Basic dGl0bzp0aXRv'
-    }
+    file = open('element-info.txt', 'r')
+    out = file.readlines()
+    url = f"http://{out[2].strip()}:{out[3].strip()}/records"
 
     filter = '''{"name":"discord_id", "op":"eq", "val":"''' + "{a}".format(a=ply) + '''"}'''
 
-    r = requests.get(url + f"?filter=[{filter}]", auth=HTTPBasicAuth('tito', 'tito'))
+    r = requests.get(url + f"?filter=[{filter}]", auth=HTTPBasicAuth(f'{out[0].strip()}', f'{out[1].strip()}'))
+    file.close()
     read = json.loads(r.text)
     data = read['data']
     kills = 0
@@ -413,12 +433,16 @@ async def testget(ctx):
 
     read = json.loads(r.text)
     # data = read['data']
-
+    #
+    # score = 0
+    # discord_name = 'marley'
     # for d in data:
-    #     print(d['attributes']['kills'])
+    #     d['attributes']['score'] += score
     # return None
-
-    print(read)
+    #
+    # print(discord_name + '-' + score)
+    #
+    # print(read)
 
 
 # testing a post command
@@ -542,12 +566,14 @@ async def giverole(ctx, role_name, vc_channel):
         await u.add_roles(role)
     await ctx.send(f'!giverole Completed! - Execution Time: {time.time() - start_time}s')
 
+
 @bot.command()
 @has_permissions(manage_roles=True)
 async def test(ctx):
     lb = load_workbook(filename='scrimrole.xlsx')
     ws = lb.active
     print(ws['A1'].value)
+
 
 # global functions mean for scrim role function
 
@@ -567,6 +593,7 @@ def check_s1(check):
     lb.close()
     return False
 
+
 def check_s2(check):
     lb = load_workbook(filename='scrimrole.xlsx')
     ws = lb.active
@@ -582,6 +609,7 @@ def check_s2(check):
     lb.save('scrimrole.xlsx')
     lb.close()
     return False
+
 
 def check_s3(check):
     lb = load_workbook(filename='scrimrole.xlsx')
@@ -599,9 +627,10 @@ def check_s3(check):
     lb.close()
     return False
 
+
 # rando
 @bot.command()
-@has_permissions(administrator=True)
+@has_permissions(manage_roles=True)
 async def updatescrimroles(ctx):
     await ctx.send('Executing !updatescrimroles')
     start_time = time.time()
@@ -625,6 +654,7 @@ async def updatescrimroles(ctx):
 
     await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
+
 # command to update a role in a given voice chat
 @bot.command()
 @has_permissions(manage_roles=True)
@@ -647,8 +677,9 @@ async def old_updatescrimroles(ctx, vc_channel):
 
     await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
+
 @bot.command()
-@has_permissions(administrator=True)
+@has_permissions(manage_roles=True)
 async def removeallscrimroles(ctx):
     await ctx.send('Executing !removeallscrimroles')
     start_time = time.time()
@@ -692,7 +723,7 @@ async def removeallscrimroles(ctx):
 
 # command to mass remove a specific role to all users in the discord
 @bot.command()
-@has_permissions(administrator=True)
+@has_permissions(manage_roles=True)
 async def old_removeallscrimroles(ctx):
     await ctx.send('Executing !removeallscrimroles')
     start_time = time.time()
