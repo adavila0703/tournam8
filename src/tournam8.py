@@ -113,29 +113,30 @@ async def on_message(message):
                 thresh = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
                 stats = findingstats(pytesseract.image_to_string(thresh, lang='eng', config='--psm 12', nice=1).split())
 
-                file = open('element-info.txt', 'r')
-                out = file.readlines()
-                url = f"http://{out[2].strip()}:{out[3].strip()}/records"
 
-                payload = "{\r\n    \"data\": {\r\n        \"type\": \"record\",\r\n        \"attributes\": {\r\n     " \
-                          f"       \"kills\": {500},\r\n            \"damage\": 2000,\r\n            \"place\": 5," \
-                          "\r\n            \"assists\": 3,\r\n            \"username\": \"marley-ee\",\r\n            " \
-                          "\"game\": \"Game 1\",\r\n            \"discord_id\": 223265725161144320,\r\n            " \
-                          "\"scrimy_name\": \"\",\r\n            \"tourny_name\": \"Element 1\",\r\n            " \
-                          "\"qualy_name\": \"\",\r\n            \"score\": 343\r\n        }\r\n    }\r\n} "
-
-                headers = {
-                    'Authorization': f'Basic {out[4].strip()}',
-                    'Content-Type': 'application/json'
-                }
-
-                response = requests.request("POST", url, headers=headers, data=payload)
-
-                print(response.text.encode('utf8'))
                 try:
                     await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
                                                f'\nAssists: {stats[2]} \nDamage: {stats[3]}')
+                    file = open('element-info.txt', 'r')
+                    out = file.readlines()
+                    url = f"http://{out[2].strip()}:{out[3].strip()}/records"
 
+                    payload = "{\r\n    \"data\": {\r\n        \"type\": \"record\",\r\n        \"attributes\": {\r\n     " \
+                              f"       \"kills\": {stats[1]},\r\n            \"damage\": {stats[3]},\r\n            \"place\": 5," \
+                              f"\r\n            \"assists\": {stats[2]},\r\n            \"username\": \"{message.author}\",\r\n            " \
+                              f"\"game\": \"Game 1\",\r\n            \"discord_id\": {message.id},\r\n            " \
+                              "\"scrimy_name\": \"\",\r\n            \"tourny_name\": \"Element 1\",\r\n            " \
+                              f"\"qualy_name\": \"\",\r\n            \"score\": {3000}\r\n        " \
+                              "}\r\n    }\r\n} "
+
+                    headers = {
+                        'Authorization': f'Basic {out[4].strip()}',
+                        'Content-Type': 'application/json'
+                    }
+
+                    response = requests.request("POST", url, headers=headers, data=payload)
+
+                    print(response.text.encode('utf8'))
                 except:
                     print('except')
                     pass
