@@ -125,3 +125,6 @@ dmypy.json
 .pyre/
 
 token.txt
+element-info.txt
+duelstats.xlsx
+.idea
