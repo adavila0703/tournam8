@@ -7,7 +7,6 @@ import time
 import discord.utils
 
 
-# testing command
 @bot.command()
 @has_permissions(administrator=True)
 async def testingpost(ctx):
