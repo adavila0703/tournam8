@@ -1,7 +1,27 @@
 from bot.bot import bot
+from commands.nobot_commands import findingstats
+import os
+import requests
+import pytesseract
+import cv2
+
+
+pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
+
+tournyname = ''
+tournystart = True
+marladuelwins = 0
+
+
+@bot.event
+async def on_ready():
+    """Print message when bot is ready"""
+    print('We have logged in as {0.user}'.format(bot))
+
 
 @bot.event
 async def on_message(message):
+    """Pre written messages that the bot will use to respond with + OCR"""
     global gamecount
     elduel = ['Fire', 'Toxic', 'Wind', 'Ice', 'Lightning']
 
@@ -47,7 +67,6 @@ async def on_message(message):
                 image = cv2.imread(str(message.author).split('#')[0] + '.png', 0)
                 thresh = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
                 stats = findingstats(pytesseract.image_to_string(thresh, lang='eng', config='--psm 12', nice=1).split())
-
 
                 try:
                     await message.channel.send(f'Player: {message.author} \nPlace: {stats[0]} \nExiles: {stats[1]}'
