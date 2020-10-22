@@ -42,12 +42,12 @@ async def updatescrimroles(ctx):
 
     for c in channels:
         for a in c.members:
-            if check_s1(a) == False:
+            if not check_s1(a):
                 await a.add_roles(s1)
-            elif check_s2(a) == False:
+            elif not check_s2(a):
                 await a.add_roles(s2)
                 await a.remove_roles(s1)
-            elif check_s3(a) == False:
+            elif not check_s3(a):
                 await a.add_roles(s3)
                 await a.remove_roles(s2)
             else:

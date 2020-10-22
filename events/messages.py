@@ -5,27 +5,21 @@ import requests
 import pytesseract
 import cv2
 
-
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
 tournyname = ''
 tournystart = True
-marladuelwins = 0
 
 
 @bot.event
 async def on_ready():
     """Print message when bot is ready"""
-    print('We have logged in as {0.user}'.format(bot))
+    print(f'We have logged in as {bot.user}')
 
 
 @bot.event
 async def on_message(message):
-    """Pre written messages that the bot will use to respond with + OCR"""
-    global gamecount
-    elduel = ['Fire', 'Toxic', 'Wind', 'Ice', 'Lightning']
-
-    # regular discord message fun
+    """Pre written messages that the bot will use to respond with"""
     if message.author == bot.user:
         return
 
@@ -55,12 +49,8 @@ async def on_message(message):
             or 'wheres marley-ee' in message.content.lower() or "where's marley-ee" in message.content.lower():
         await message.channel.send('marley-EE is at the grocery store...')
 
-    if 'tell me a joke' in message.content.lower():
-        print('nothing')
-
-    # OCR this is where the bot reads the values from a screenshots and sends the data to a database
     if message.attachments:
-        if tournystart == True:
+        if tournystart:
             if str(message.channel) == str(message.author).split('#')[0].lower():
                 print('hi')
                 await message.attachments[0].save(str(message.author).split('#')[0] + '.png')
@@ -101,3 +91,4 @@ async def on_message(message):
         else:
             pass
     await bot.process_commands(message)
+
