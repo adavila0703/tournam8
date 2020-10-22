@@ -153,6 +153,7 @@ async def makescreenshotchannel(ctx, vc_channel, category):
     file = open('players.txt', 'w')
     channel = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
     get_text_channels = ctx.guild.text_channels
+
     if discord.utils.get(ctx.guild.categories, name=category) is None:
         await ctx.send('Category doesnt exist')
     else:

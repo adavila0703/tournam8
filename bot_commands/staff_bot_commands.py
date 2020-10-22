@@ -3,7 +3,7 @@ from openpyxl import load_workbook
 from discord.ext.commands import has_permissions
 import time
 import discord.utils
-from commands.nobot_commands import check_s1, check_s2, check_s3
+from utils.global_functions import check_s1, check_s2, check_s3
 
 
 @bot.command()
@@ -56,7 +56,6 @@ async def updatescrimroles(ctx):
     await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
 
 
-# command to update a role in a given voice chat
 @bot.command()
 @has_permissions(manage_roles=True)
 async def old_updatescrimroles(ctx, vc_channel):
@@ -146,7 +145,7 @@ async def old_removeallscrimroles(ctx):
 @bot.command()
 @has_permissions(manage_roles=True)
 async def help(member):
-    """Help command which shows all the available commands"""
+    """Help command which shows all the available utils"""
     await member.send("```                            Help Menu\n"
                       "\nHow to use: !func(p1, p2) will be written out like !func p1 p2, for spaces use"
                       "quotes!\n\n"

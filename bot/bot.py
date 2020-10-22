@@ -1,5 +1,5 @@
 from discord.ext.commands import Bot
-from commands.nobot_commands import get_token
+from utils.global_functions import get_token
 
 bot = Bot(command_prefix='!')
 bot.remove_command('help')

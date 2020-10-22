@@ -1,5 +1,5 @@
 from bot.bot import bot
-from commands.nobot_commands import findingstats
+from utils.global_functions import findingstats
 import os
 import requests
 import pytesseract

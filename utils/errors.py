@@ -33,8 +33,8 @@ async def updatescrimroles_error(ctx, error):
 
 # @giverole.error
 # async def giverole_error(ctx, error):
-#     if isinstance(error, commands.MissingRequiredArgument):
+#     if isinstance(error, utils.MissingRequiredArgument):
 #         await ctx.send('Error: You are missing your arguments')
-#     if isinstance(error, commands.CommandInvokeError):
+#     if isinstance(error, utils.CommandInvokeError):
 #         await ctx.send('Error: No channels or category doesnt exist.')
 
