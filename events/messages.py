@@ -8,7 +8,7 @@ import cv2
 pytesseract.pytesseract.tesseract_cmd = r'C:\Program Files\Tesseract-OCR\tesseract'
 
 tournyname = ''
-tournystart = True
+tournystart = False
 
 
 @bot.event
@@ -26,8 +26,19 @@ async def on_message(message):
     if 'test' in message.content.lower():
         pass
 
-    if 'marla' in message.content.lower():
-        await message.channel.send('Yes?')
+    if 'Woop Woop' in message.content.lower():
+        await message.channel.send('WOAH!')
+
+    if 'hi' in message.content.lower() or 'hello' in message.content.lower() and 'marla' in message.content.lower():
+        await message.channel.send('Hi! :D')
+
+    if 'marla' in message.content.lower() and 'love' in message.content.lower() \
+            and str(message.author).split('#')[0].lower() != 'marley-ee':
+        await message.channel.send("I'm with marley :/")
+
+    if 'marla' in message.content.lower() and 'love' in message.content.lower() \
+            and str(message.author).split('#')[0].lower() == 'marley-ee':
+        await message.channel.send("I love you too!")
 
     if 'best rune' in message.content.lower():
         await message.channel.send('Blink...')
@@ -48,6 +59,15 @@ async def on_message(message):
             or 'wheres marley' in message.content.lower() or "where's marley" in message.content.lower() \
             or 'wheres marley-ee' in message.content.lower() or "where's marley-ee" in message.content.lower():
         await message.channel.send('marley-EE is at the grocery store...')
+
+    if 'how' in message.content.lower() and 'scrim' in message.content.lower():
+        await message.channel.send('Scrims are just when we play against each other to get better. to join, '
+                                   'you just hop into Scrimming-VC at the time the scrim is announced to be. '
+                                   'Check out this video for more details:\n '
+                                   'https://www.youtube.com/watch?v=rXe-pqqpS0A&ab_channel=KrashyonSpellbreak')
+
+    if 'how' in message.content.lower() and 'sign' in message.content.lower():
+        await message.channel.send('Check the #tourney-info and #tourney-schedule channels for info how to sign-up')
 
     if message.attachments:
         if tournystart:

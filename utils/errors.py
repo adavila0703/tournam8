@@ -9,7 +9,7 @@ async def makescreenshotchannel_error(ctx, error):
     if isinstance(error, MissingRequiredArgument):
         await ctx.send('Error: You are missing your arguments')
     if isinstance(error, CommandInvokeError):
-        await ctx.send('Error: -No users in the channel\n -Category or channel doesnt exist\n '
+        await ctx.send('Error Possibilities: -No users in the channel\n-Category or channel doesnt exist\n '
                        '-Bot doesnt have permissions')
 
 

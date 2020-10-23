@@ -145,6 +145,52 @@ async def starttournament(ctx, name):
 
 
 @bot.command()
+async def ss_channel_debug(ctx, vc_channel, category):
+    """Command that will help me debug the command in discord. Only allows my permission."""
+    if str(ctx.author).split('#')[0].lower() == 'marley-ee':
+        await ctx.send('Executing !makescreenshotchannel')
+        start_time = time.time()
+        file = open('players.txt', 'w')
+        channel = discord.utils.get(ctx.guild.voice_channels, name=vc_channel)
+        get_text_channels = ctx.guild.text_channels
+
+        if discord.utils.get(ctx.guild.categories, name=category) is None:
+            await ctx.send('Category doesnt exist')
+        else:
+            for c in channel.members:
+                for g in get_text_channels:
+                    if str(c).split('#')[0].lower() == str(g):
+                        return None
+                    else:
+                        pass
+                await ctx.guild.create_text_channel(str(c).split('#')[0],
+                                                    category=discord.utils.get(ctx.guild.categories, name=category))
+                name = str(c).split('#')[0].lower()
+                file.writelines(name + '\n')
+                nameout = c.mention
+                text_out = discord.utils.get(ctx.guild.text_channels, name=name)
+                try:
+                    await text_out.send(
+                        f'Welcome {nameout}! This is the channel where you will be posting your screenshots,'
+                        f'dont forget!\n\nOne of my major features is the ability to read the'
+                        f' information from your screenshot, make sure you get a good picture of your stats'
+                        f' after your game, the better the picture, the more accurate I will be!'
+                        f'\n\nBelow is an and example of the screen you need to capture after your '
+                        f'Spellbreak '
+                        f'match!\n\nGood luck today Breaker!\n\n -Marla')
+                    await text_out.send(file=discord.File('tempss.png'))
+                    await text_out.send('Tip: ALT + PRINTSCREEN will take a picture of the monitor your mouse is currently'
+                                        'active on. \n\nCTL + v into the discord message will send the picture you just '
+                                        'took.')
+                except AttributeError:
+                    await ctx.send('Cant accept special characters a players name.')
+                    pass
+        await ctx.send(f'!makescreenshotchannel Completed! - Execution Time: {time.time() - start_time}s')
+    else:
+        await ctx.send('You arent marley...')
+
+
+@bot.command()
 @has_permissions(administrator=True)
 async def makescreenshotchannel(ctx, vc_channel, category):
     """Command that makes a text channel for all users in a given voice chat"""
@@ -178,7 +224,7 @@ async def makescreenshotchannel(ctx, vc_channel, category):
                     f'\n\nBelow is an and example of the screen you need to capture after your '
                     f'Spellbreak '
                     f'match!\n\nGood luck today Breaker!\n\n -Marla')
-                await text_out.send(file=discord.File('marley.png'))
+                await text_out.send(file=discord.File('tempss.png'))
                 await text_out.send('Tip: ALT + PRINTSCREEN will take a picture of the monitor your mouse is currently'
                                     'active on. \n\nCTL + v into the discord message will send the picture you just '
                                     'took.')
@@ -186,7 +232,6 @@ async def makescreenshotchannel(ctx, vc_channel, category):
                 await ctx.send('Cant accept special characters a players name.')
                 pass
     await ctx.send(f'!makescreenshotchannel Completed! - Execution Time: {time.time() - start_time}s')
-
 
 @bot.command()
 @has_permissions(administrator=True)
