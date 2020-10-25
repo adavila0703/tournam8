@@ -23,15 +23,6 @@ async def on_message(message):
     if message.author == bot.user:
         return
 
-    if 'test' in message.content.lower():
-        pass
-
-    if 'Woop Woop' in message.content.lower():
-        await message.channel.send('WOAH!')
-
-    if 'hi' in message.content.lower() or 'hello' in message.content.lower() and 'marla' in message.content.lower():
-        await message.channel.send('Hi! :D')
-
     if 'marla' in message.content.lower() and 'love' in message.content.lower() \
             and str(message.author).split('#')[0].lower() != 'marley-ee':
         await message.channel.send("I'm with marley :/")
@@ -39,15 +30,6 @@ async def on_message(message):
     if 'marla' in message.content.lower() and 'love' in message.content.lower() \
             and str(message.author).split('#')[0].lower() == 'marley-ee':
         await message.channel.send("I love you too!")
-
-    if 'best rune' in message.content.lower():
-        await message.channel.send('Blink...')
-
-    if 'blink' in message.content.lower() or 'blinked' in message.content.lower():
-        await message.channel.send('RIP Blink :(')
-
-    if 'pink marla' in message.content.lower() or 'pinkmarla' in message.content.lower():
-        await message.channel.send('Pink Marla is an impostor!')
 
     if 'marla who created you?' in message.content.lower() or 'marla who created you' in message.content.lower() \
             or 'who created marla' in message.content.lower() or 'who made marla' in message.content.lower() \
@@ -61,9 +43,10 @@ async def on_message(message):
         await message.channel.send('marley-EE is at the grocery store...')
 
     if 'how' in message.content.lower() and 'scrim' in message.content.lower():
-        await message.channel.send('Scrims are just when we play against each other to get better. to join, '
-                                   'you just hop into Scrimming-VC at the time the scrim is announced to be. '
-                                   'Check out this video for more details:\n '
+        await message.channel.send('Scrims are just when we play against each other to get better. '
+                                   'To join, you just hop into Scrimming-VC at the time the scrim is announced to be. '
+                                   'From there, a scrim host will help coordinate everyone into the lobby. Check out '
+                                   'this video for more details:\n '
                                    'https://www.youtube.com/watch?v=rXe-pqqpS0A&ab_channel=KrashyonSpellbreak')
 
     if 'how' in message.content.lower() and 'sign' in message.content.lower():
@@ -111,4 +94,3 @@ async def on_message(message):
         else:
             pass
     await bot.process_commands(message)
-

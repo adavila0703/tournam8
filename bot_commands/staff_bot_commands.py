@@ -40,6 +40,31 @@ async def updatescrimroles(ctx):
     s2 = discord.utils.get(ctx.guild.roles, name='Scrimmed 2x')
     s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
 
+    for channel in channels:
+        for member in channel.members:
+            if s3 not in member.roles and s2 not in member.roles and s1 not in member.roles:
+                await member.add_roles(s1)
+            elif s1 in member.roles:
+                await member.add_roles(s2)
+                await member.remove_roles(s1)
+            elif s2 in member.roles:
+                await member.add_roles(s3)
+                await member.remove_roles(s2)
+
+    await ctx.send(f'!updatescrimroles Completed! - Execution Time: {time.time() - start_time}s')
+
+
+@bot.command()
+@has_permissions(manage_roles=True)
+async def old_updatescrimroles_2(ctx):
+    """Command to update players scrim role"""
+    await ctx.send('Executing !updatescrimroles')
+    start_time = time.time()
+    channels = ctx.guild.voice_channels
+    s1 = discord.utils.get(ctx.guild.roles, name='Scrimmed 1x')
+    s2 = discord.utils.get(ctx.guild.roles, name='Scrimmed 2x')
+    s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
+
     for c in channels:
         for a in c.members:
             if not check_s1(a):
@@ -58,7 +83,7 @@ async def updatescrimroles(ctx):
 
 @bot.command()
 @has_permissions(manage_roles=True)
-async def old_updatescrimroles(ctx, vc_channel):
+async def old_updatescrimroles_1(ctx, vc_channel):
     """Old update scrim role function, this is not in use"""
     await ctx.send('Executing !updatescrimroles')
     start_time = time.time()
@@ -82,6 +107,26 @@ async def old_updatescrimroles(ctx, vc_channel):
 @bot.command()
 @has_permissions(manage_roles=True)
 async def removeallscrimroles(ctx):
+    """Function to remove all scrim roles from players that had the scrim role"""
+    await ctx.send('Executing !removeallscrimroles')
+    start_time = time.time()
+    s1 = discord.utils.get(ctx.guild.roles, name='Scrimmed 1x')
+    s2 = discord.utils.get(ctx.guild.roles, name='Scrimmed 2x')
+    s3 = discord.utils.get(ctx.guild.roles, name='Scrimmed 3x')
+
+    for member in s3.members:
+        await member.remove_roles(s3)
+    for member in s2.members:
+        await member.remove_roles(s2)
+    for member in s1.members:
+        await member.remove_roles(s1)
+
+    await ctx.send(f'!removeallscrimroles Completed! - Execution Time: {time.time() - start_time}s')
+
+
+@bot.command()
+@has_permissions(manage_roles=True)
+async def old_removeallscrimroles_2(ctx):
     """Function to remove all scrim roles from players that had the scrim role"""
     await ctx.send('Executing !removeallscrimroles')
     start_time = time.time()
@@ -125,7 +170,7 @@ async def removeallscrimroles(ctx):
 
 @bot.command()
 @has_permissions(manage_roles=True)
-async def old_removeallscrimroles(ctx):
+async def old_removeallscrimroles_1(ctx):
     """Old remove scrim role function, not in use"""
     await ctx.send('Executing !removeallscrimroles')
     start_time = time.time()

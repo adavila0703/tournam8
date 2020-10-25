@@ -4,3 +4,4 @@ import events.channels
 import bot_commands.staff_bot_commands
 import bot_commands.admin_bot_commands
 import bot_commands.user_bot_commands
+import bot_commands.testing
