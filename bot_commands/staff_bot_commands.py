@@ -22,15 +22,6 @@ async def giverole(ctx, role_name, vc_channel):
 
 @bot.command()
 @has_permissions(manage_roles=True)
-async def test(ctx):
-    """Test function"""
-    lb = load_workbook(filename='scrimrole.xlsx')
-    ws = lb.active
-    print(ws['A1'].value)
-
-
-@bot.command()
-@has_permissions(manage_roles=True)
 async def updatescrimroles(ctx):
     """Command to update players scrim role"""
     await ctx.send('Executing !updatescrimroles')
