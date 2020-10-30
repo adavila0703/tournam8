@@ -2,11 +2,7 @@
 
  ![](pics/tournam8-logo.png) 
 
-[![forthebadge](https://forthebadge.com/images/badges/made-with-python.svg)](https://forthebadge.com) 
-
-[![Generic badge](https://img.shields.io/badge/Bot_Status-Live-Green.svg)](https://shields.io/)
-
-
+#### Read more about how this idea saves $21,504 per year in manual processing [here](https://www.slixites.com/blog/we-built-a-discord-bot-that-saves-usd21-504-per-year).
 
 
 
