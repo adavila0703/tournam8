@@ -5,16 +5,7 @@ from discord.reaction import Reaction
 from src.client.tournament_client import TOURNAMENT_CLIENT as tournament_client, TournamentClient
 from src.bot.bot_commands import BotCommands
 from src.utils.output_message import OUTPUTS
-
-STATUS = {
-    'TOURNAMENT_CREATED': 'TOURNAMENT_CREATED',
-    'TOURNAMENT_DELETED': 'TOURNAMENT_DELETED',
-    'TOURNAMENT_STARTED': 'TOURNAMENT_STARTED',
-    'SIGNUPS_STARTED': 'SIGNUPS_STARTED',
-    'PLAYER_SIGNED_UP': 'PLAYER_SIGNED_UP',
-    'ERROR_STATUS_CODE': 'ERROR_STATUS_CODE',
-    'TOURNAMENT_NOT_FOUND': 'TOURNAMENT_NOT_FOUND'
-}
+from src.utils.status import TOURNAMENT_STATUS as STATUS
 
 class TournamentState:
     """Holds state of all created tournaments"""
