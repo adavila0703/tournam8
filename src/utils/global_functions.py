@@ -28,13 +28,6 @@ def checkchannels(channels, check):
     return False
 
 
-def get_token():
-    """Grabs the bot token from token.txt"""
-    with open('token.txt', 'r') as g:
-        lines = g.readlines()
-        return lines[0].strip()
-
-
 def check_s1(check):
     """Opens temp scrim role exel sheet, reads and writes information"""
     lb = load_workbook(filename='scrimrole.xlsx')
