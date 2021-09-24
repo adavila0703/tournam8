@@ -1,40 +1,51 @@
-from src.bot.bot import BOT as bot
+
 from discord import Message
 from src.ocr.ocr import ocr
 import os
-from src.state.tournament_state import TOURNAMENT_STATE as tournament_state
+from src.state.tournament_state import TOURNAMENT_STATE, TournamentState
+from discord.ext import commands
+from src.utils.status import MESSAGE_STATUS as STATUS
 
 # TODO: Instead of saving the image, could just keep it in memory and use the OCR
 # TODO: Clean this up, maybe override on_message() method
-@bot.event
-async def on_message(message: Message):
-    """Event which handles reading the screenshot information"""
-    if message.author == bot.user:
-        return None
+class MessageCoordinator(commands.Cog):
+    def __init__(
+        self,
+        bot,
+        tournament_state: TournamentState = TOURNAMENT_STATE
+    ) -> None:
+        self.bot = bot
+        self.tournament_state = tournament_state
 
-    await bot.process_commands(message)
+    @commands.Cog.listener()
+    async def on_message(self, message: Message):
+        """Event which handles reading the screenshot information"""
+        if message.author == self.bot.user:
+            return STATUS['BOT_MESSAGE']
 
-    if message.attachments == []:
-        return None
+        await self.bot.process_commands(message)
 
-    channel = message.channel
+        if message.attachments == []:
+            return STATUS['NO_ATTACHMENTS']
 
-    user = str(message.author).split('#')[0]
-    category = str(message.channel.category).split('_')
-    tournament_id = category[len(category) - 1]
+        channel = message.channel
 
-    if not tournament_state.valid_tournament_player(tournament_id, user):
-        return None
-    
-    path = './' + user + '.png'
+        user = str(message.author).split('#')[0]
+        category = str(message.channel.category).split('_')
+        tournament_id = category[len(category) - 1]
 
-    with open(path, 'w') as file:
-    # TODO: Not checking if the incoming attachment is a png
-        await message.attachments[0].save(path)
-        stats = ocr(path)
-        file.close()
-        os.remove(path)
-    
-    tournament_state.record_player_stats(tournament_id, user, stats)
-    await channel.send(f'User: {user} Game Stats: {stats}')
-    return None
+        if not self.tournament_state.valid_tournament_player(tournament_id, user):
+            return STATUS['TOURNAMENT_OR_PLAYER_NOT_VALID']
+        
+        path = './' + user + '.png'
+
+        with open(path, 'w') as file:
+        # TODO: Not checking if the incoming attachment is a png
+            await message.attachments[0].save(path)
+            stats = ocr(path)
+            file.close()
+            os.remove(path)
+        
+        self.tournament_state.record_player_stats(tournament_id, user, stats)
+        await channel.send(f'User: {user} Game Stats: {stats}')
+        return STATUS['PLAYER_STATS_RECORDED']
