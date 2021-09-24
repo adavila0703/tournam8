@@ -36,10 +36,11 @@ class BotCommands:
         reaction: Reaction
     ):
         message: Message = await channel.send(message)
-    #TODO: Should reactions be its own method???
+    #TODO: Create a new method that handles the reaction away from the initial message
         return await message.add_reaction(reaction)
 
     # TODO: maybe make reactions a list if you want multiple reactions
+    # test
     async def _start_sign_ups(
         self,
         ctx: Context,
@@ -51,6 +52,8 @@ class BotCommands:
         category: CategoryChannel = await self._create_category(ctx, category_name)
         channel: TextChannel = await self._create_text_channel_category(ctx, channel_name, category)
         reaction = await self._send_message_to_channel(message, channel, reaction)
+        # TODO Move status to src.utils.status
+        # delete this comment
         return { 
             'STATUS': 'start_up_completed',
             'category': category,
