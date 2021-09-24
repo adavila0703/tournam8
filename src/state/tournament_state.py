@@ -28,7 +28,9 @@ class TournamentState:
 
     def get_all_tournaments(self):
         """Reaches out to the api to get all active tournaments"""
-        # TODO: Check why test is failing if I destructure return here...
+        # TODO Possible failing test for get_all_tournaments
+        # labels: state, tests
+        # Destructuring get_data() return was causing error on test.
         response, content = self.client.get_data('/get_all_tournaments')
 
         if response.status_code != 200:
@@ -79,7 +81,9 @@ class TournamentState:
     async def start_signups(self, ctx: Context, id: int, reaction: Reaction):
         """Begins the signup phase for your tournament"""
 
-        #TODO: Check if the category and channel have already been created.
+        # TODO Category and channel check
+        # labels: state
+        # Do a check if the category and channel have already been created.
         await self.start_signup_command(ctx, self.tournaments[id]['channel_name'], f'General - {id}', reaction, OUTPUTS['SIGNUP'])
         return STATUS['SIGNUPS_STARTED']
 
@@ -134,7 +138,6 @@ class TournamentState:
         
         return True
 
-    # TODO: need to add and test requests to API
     def record_player_stats(self, id: str, player: str, stats: dict):
         response, content = self.client.get_data('/')
 

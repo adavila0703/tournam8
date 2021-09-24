@@ -58,7 +58,7 @@ class TournamentCommander(commands.Cog):
         await self.logger.message_to_channel(ctx, status, None)
 
 
-    # TODO: tournaments[id] and tournaments['id'] can be confusing
+    # TODO: Refactor 'id" to a better name, maybe 'tournament_id'?
     @commands.command()
     async def show_tournament_list(
         self,

@@ -18,7 +18,9 @@ async def on_reaction_add(reaction: Reaction, user: User):
     category_split: Message = reaction.message.channel.category.name.split('_')
     tournament_id = category_split[len(category_split) - 1]
     
-    # TODO: need to create a check to see if the message you are reacting to is owned by the bot
+    # TODO Message reacting to is from the bot / tournament(on_reaction_add)
+    # Need to create a check to see if the message you are reacting to is owned by the bot
+    # and/or part of an existing tournament
     if tournament := tournament_state.tournaments.get(tournament_id):
         tournament_state.player_signed_up(tournament_id, user.name)
         await user.send(OUTPUTS['SIGNUP_SUCCESS'] + tournament['name'] + ' Good Luck!')
@@ -32,7 +34,9 @@ async def on_raw_reaction_remove(payload: RawReactionActionEvent):
     category_split = str(category.name).split('_')
     tournament_id = category_split[len(category_split) - 1]
 
-    # TODO: need to create a check to see if the message you are reacting to is owned by the bot
+    # TODO Message reacting to is from the bot / tournament (on_raw_reaction_remove)
+    # Need to create a check to see if the message you are reacting to is owned by the bot
+    # and/or part of an existing tournament
     if tournament := tournament_state.tournaments.get(tournament_id):
         tournament_state.player_removed_from_signups(tournament_id, user.name)
         await user.send(OUTPUTS['REMOVED_SIGNUPS'] + tournament['name'])

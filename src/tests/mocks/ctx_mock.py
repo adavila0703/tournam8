@@ -29,7 +29,6 @@ class CtxMock:
             future.set_result(category_name)
             return future
         
-        # TODO: set result to categories not incoming string aname
         def create_text_channel(self, name: str, category: str):
             channel = TextChannelMock(name)
             self.categories[category] = channel

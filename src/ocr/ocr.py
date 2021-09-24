@@ -7,12 +7,12 @@ ENV = dotenv_values('.env')
 
 pytesseract.pytesseract.tesseract_cmd = ENV['OCR_ENGINE_PATH']
 
-# TODO: A lot of magic numbers, but might have to change depending on the screenshot size.
-
+# TODO Magic numbers in OCR
+# labels: ocr
+# Move these magic numbers to an enviornment variable
 def ocr(path: str) -> dict:
     """Reads image of the incoming author"""
     image = cv2.imread(path, 0)
-    # TODO: get rid of magic numbers
     threshold = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
     stats = stat_parser(pytesseract.image_to_string(threshold, lang='eng', config='--psm 12', nice=1).split())
     return stats

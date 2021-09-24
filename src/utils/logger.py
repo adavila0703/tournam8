@@ -3,7 +3,9 @@ from discord.ext.commands import Context
 import discord.utils
 
 
-# TODO: Possible code duplication in bot_commands, check if this can be replaced
+# TODO: Code duplication
+# labels: duplication
+# Go to src.bot.bot_commands has a similar method, do we want to keep both?
 async def message_to_channel(ctx: Context, message: str, incoming_channel: str) -> None:
     """Directs a message out to a specific channel. Use None as channel to reply where the command was submitted"""
     if incoming_channel != None:

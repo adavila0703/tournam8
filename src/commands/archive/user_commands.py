@@ -3,7 +3,7 @@
 # import src.utils.logger as logger
 # from src.state.tournament_state import TOURNAMENT_STATE
 
-# # TODO: requires major cleanup
+
 # # @bot.command()
 # async def duel(ctx, choice):
 #     """Dueling game for community interactions"""

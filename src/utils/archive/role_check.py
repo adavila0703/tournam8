@@ -1,6 +1,6 @@
 # from openpyxl import load_workbook
 
-# # TODO: rename this file and create state for this
+
 # def checkchannels(channels, check):
 #     """Check for a specific channel"""
 #     for c in channels:

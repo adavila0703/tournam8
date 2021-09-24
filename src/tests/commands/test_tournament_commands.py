@@ -9,7 +9,9 @@ logger_mock = Mock()
 bot_mock = Mock()
 commander = TournamentCommander(bot_mock, tournament_state_mock, logger_mock)
 
-#TODO: Test requires major refactor
+#TODO: Major refactor required
+# labels: Tests
+# Refactor this file to accept unittest.mock 
 
 @pytest.mark.asyncio
 async def test_create_tournament():

@@ -2,7 +2,7 @@
 
 
 
-# # TODO: make sure we can use this method in multiple palces
+
 # @bot.event
 # async def on_message(message):
 #     """Pre written messages that the bot will use to respond with"""

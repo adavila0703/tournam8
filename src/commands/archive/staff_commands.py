@@ -18,7 +18,6 @@
 #         await u.add_roles(role)
 #     await ctx.send(f'!giverole Completed! - Execution Time: {time.time() - start_time}s')
 
-# # TODO: Simplify this
 # @bot.command()
 # @has_permissions(manage_roles=True)
 # async def update_scrimroles(ctx):

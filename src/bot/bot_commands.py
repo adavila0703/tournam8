@@ -39,8 +39,7 @@ class BotCommands:
     #TODO: Create a new method that handles the reaction away from the initial message
         return await message.add_reaction(reaction)
 
-    # TODO: maybe make reactions a list if you want multiple reactions
-    # test
+    # TODO: Create a way to send in a list of reactions
     async def _start_sign_ups(
         self,
         ctx: Context,
@@ -53,7 +52,6 @@ class BotCommands:
         channel: TextChannel = await self._create_text_channel_category(ctx, channel_name, category)
         reaction = await self._send_message_to_channel(message, channel, reaction)
         # TODO Move status to src.utils.status
-        # delete this comment
         return { 
             'STATUS': 'start_up_completed',
             'category': category,

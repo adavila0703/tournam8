@@ -1,10 +1,9 @@
 from asyncio import Future
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import Mock
 import pytest
 from src.state.tournament_state import TournamentState
-import asyncio
 
-# TODO: clean up mocks
+
 uuid = Mock()
 client_happy = Mock()
 client_sad = Mock()
@@ -62,7 +61,8 @@ def test_create_tournament():
 def test_delete_tournament():
     happy = tournament_state_happy.delete_tournament('id')
     assert happy == {'TOURNAMENT_DELETED': 'id'}
-    # TODO: Fix assertion error here
+    # TODO: Assertion error in test
+    # labels: Tests
     # client_happy.send_data.assert_called_with('/create_tournament', { 'id': 'id' }, 'create_tournament')
 
     sad = tournament_state_sad.delete_tournament('id')
@@ -134,7 +134,9 @@ def test_player_signed_up():
     sad = tournament_state_sad.start_tournament('123-321')
     assert sad == 'ERROR_STATUS_CODE'
 
-# TODO: find a way to reset the tournament list at each test
+# TODO: Tournament state reset
+# labels: Tests
+# State is retaining during this test, implement a way to reset the state after each test.
 def test_valid_tournament_player():
     check_all = tournament_state_happy.valid_tournament_player('123-321', 'player')
     check_player = tournament_state_happy.valid_tournament_player('123-321', 'other_player')

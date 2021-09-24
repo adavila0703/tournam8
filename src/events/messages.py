@@ -6,8 +6,6 @@ from src.state.tournament_state import TOURNAMENT_STATE, TournamentState
 from discord.ext import commands
 from src.utils.status import MESSAGE_STATUS as STATUS
 
-# TODO: Instead of saving the image, could just keep it in memory and use the OCR
-# TODO: Clean this up, maybe override on_message() method
 class MessageCoordinator(commands.Cog):
     def __init__(
         self,
@@ -40,7 +38,12 @@ class MessageCoordinator(commands.Cog):
         path = './' + user + '.png'
 
         with open(path, 'w') as file:
-        # TODO: Not checking if the incoming attachment is a png
+        # TODO Check for PNG
+        # This is currently not checking if the incoming image is a PNG
+
+
+        # TODO In memory image instead of disk
+        # Instead of saving the image to the disk, we could keep it in memory using numpy
             await message.attachments[0].save(path)
             stats = ocr(path)
             file.close()
