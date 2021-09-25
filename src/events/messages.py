@@ -7,17 +7,20 @@ from src.state.tournament_state import TOURNAMENT_STATE, TournamentState
 from discord.ext import commands
 from src.utils.status import MESSAGE_STATUS as STATUS
 from src.utils import logger
+from src.ocr import ocr
 
 class MessageCoordinator(commands.Cog):
     def __init__(
         self,
         bot,
         tournament_state: TournamentState = TOURNAMENT_STATE,
-        log: logger = logger
+        log: logger = logger,
+        ocr = ocr
     ) -> None:
         self.bot = bot
         self.tournament_state = tournament_state
         self.logger = log
+        self.ocr = ocr
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
@@ -54,7 +57,7 @@ class MessageCoordinator(commands.Cog):
         # TODO In memory image instead of disk
         # Instead of saving the image to the disk, we could keep it in memory using numpy
             await message.attachments[0].save(path)
-            stats = ocr(path)
+            stats = self.ocr(path)
             file.close()
             os.remove(path)
         

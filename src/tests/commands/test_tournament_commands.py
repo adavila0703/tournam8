@@ -1,3 +1,4 @@
+from src.tests.future_creator import future_creator
 import pytest
 from src.commands.tournament_commands import TournamentCommander
 from unittest.mock import Mock
@@ -7,16 +8,21 @@ ctx_mock = Mock()
 tournament_state_mock = Mock()
 logger_mock = Mock()
 bot_mock = Mock()
+
+tournament_state_mock.create_tournament.return_value = future_creator('test_tournament')
+
 commander = TournamentCommander(bot_mock, tournament_state_mock, logger_mock)
 
-#TODO: Major refactor required
+#TODO: Major refactor required / Broken tests
 # labels: Tests
 # Refactor this file to accept unittest.mock 
 
 # @pytest.mark.asyncio
 # async def test_create_tournament():
-#     status = await commander.create_tournament(ctx_mock, 'test_tournament')
-    # assert tournament_state.tournaments[0] == 'test_tournament'
+#     woop = TournamentCommander(bot_mock, tournament_state_mock, logger_mock)
+#     status = await woop.create_tournament(ctx_mock, 'test_tournament')
+#     print(status)
+#     assert 3 == 2
 
 # @pytest.mark.asyncio
 # async def test_delete_trounament():
