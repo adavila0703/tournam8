@@ -6,20 +6,24 @@ import pytest
 from src.tests.future_creator import future_creator
 from src.utils.status import MESSAGE_STATUS as STATUS
 
+# TODO Mocks require cleanup
+# labels: tests
+# clean up mocks, maybe find a better way to create mocks?
+
 bot_mock = Mock()
 message_mock = Mock()
 state_mock = Mock()
 channel_mock = Mock()
 logger_mock = Mock()
+ocr = Mock()
+
 logger_mock.message_to_channel.return_value = future_creator(None)
 state_mock.valid_tournament_player.return_value = True
-
 bot_mock.user = 'bot'
 bot_mock.process_commands.return_value = future_creator(None)
-
 message_mock.author = 'TestUser#1'
 
-coordinator = MessageCoordinator(bot_mock, state_mock, logger_mock)
+coordinator = MessageCoordinator(bot_mock, state_mock, logger_mock, ocr)
 
 @pytest.fixture(autouse=True)
 def pytest_reset_mocks():
@@ -47,13 +51,26 @@ async def test_on_message_valid_tournament():
     "Tests if the incoming message.attachments is equal to an empty list"
     state_mock.valid_tournament_player.return_value = False
     message_mock.author = 'TestUser#1'
-    save_func = message_mock.save.return_value = future_creator(None)
     channel_mock.category = "TestCategory_1"
-    channel_object = channel_mock
-    message_mock.channel = channel_object
+    message_mock.channel = channel_mock
     message_mock.attachments = [
-        save_func
+        'test'
     ]
     result = await coordinator.on_message(message_mock)
     assert result == STATUS['TOURNAMENT_OR_PLAYER_NOT_VALID']
+
+@pytest.mark.asyncio
+async def test_on_message_success():
+    "Tests if the incoming message.attachments is equal to an empty list"
+    state_mock.valid_tournament_player.return_value = True
+    message_mock.author = 'TestUser#1'
+    message_mock.save.return_value = future_creator(None)
+    channel_mock.category = "TestCategory_1"
+    channel_mock.send.return_value = future_creator(None)
+    message_mock.channel = channel_mock
+    message_mock.attachments = [
+        message_mock
+    ]
+    result = await coordinator.on_message(message_mock)
+    assert result == STATUS['PLAYER_STATS_RECORDED']
 

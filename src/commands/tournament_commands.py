@@ -26,6 +26,7 @@ class TournamentCommander(commands.Cog):
         """Creates a tournament"""
         status = self.tournament_state.create_tournament(name)
         await self.logger.message_to_channel(ctx, status, None)
+        return status
 
     @commands.command()
     @commands.has_permissions(administrator=True)
