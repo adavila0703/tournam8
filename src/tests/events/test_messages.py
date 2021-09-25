@@ -10,6 +10,8 @@ bot_mock = Mock()
 message_mock = Mock()
 state_mock = Mock()
 channel_mock = Mock()
+logger_mock = Mock()
+logger_mock.message_to_channel.return_value = future_creator(None)
 state_mock.valid_tournament_player.return_value = True
 
 bot_mock.user = 'bot'
@@ -17,7 +19,7 @@ bot_mock.process_commands.return_value = future_creator(None)
 
 message_mock.author = 'TestUser#1'
 
-coordinator = MessageCoordinator(bot_mock, state_mock)
+coordinator = MessageCoordinator(bot_mock, state_mock, logger_mock)
 
 @pytest.fixture(autouse=True)
 def pytest_reset_mocks():
