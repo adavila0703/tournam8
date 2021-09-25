@@ -1,8 +1,7 @@
 from discord.ext.commands import Bot
-from dotenv import dotenv_values
+from src.env.env import ENV
 from src.commands.tournament_commands import TournamentCommander
 
-ENV = dotenv_values('.env')
 
 BOT = Bot(command_prefix='!')
 # TODO: Need to add message and user_commmand cog to bot 

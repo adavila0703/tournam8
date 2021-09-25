@@ -13,9 +13,9 @@ commander = TournamentCommander(bot_mock, tournament_state_mock, logger_mock)
 # labels: Tests
 # Refactor this file to accept unittest.mock 
 
-@pytest.mark.asyncio
-async def test_create_tournament():
-    status = await commander.create_tournament(ctx_mock, 'test_tournament')
+# @pytest.mark.asyncio
+# async def test_create_tournament():
+#     status = await commander.create_tournament(ctx_mock, 'test_tournament')
     # assert tournament_state.tournaments[0] == 'test_tournament'
 
 # @pytest.mark.asyncio

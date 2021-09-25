@@ -34,3 +34,5 @@ jobs:
     - name: Test with pytest
       run: |
         pytest
+      env:
+        API_PATH: ${{ secrets.API_PATH }}

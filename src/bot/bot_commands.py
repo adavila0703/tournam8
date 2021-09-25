@@ -30,7 +30,6 @@ class BotCommands:
 
     async def _send_message_to_channel(
         self,
-        ctx: Context,
         message: str, 
         channel: TextChannel, 
         reaction: Reaction

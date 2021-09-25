@@ -22,14 +22,14 @@ class MessageCoordinator(commands.Cog):
             return STATUS['BOT_MESSAGE']
 
         await self.bot.process_commands(message)
-
+        print(message.attachments)
         if message.attachments == []:
             return STATUS['NO_ATTACHMENTS']
 
         channel = message.channel
 
         user = str(message.author).split('#')[0]
-        category = str(message.channel.category).split('_')
+        category = str(channel.category).split('_')
         tournament_id = category[len(category) - 1]
 
         if not self.tournament_state.valid_tournament_player(tournament_id, user):

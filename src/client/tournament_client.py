@@ -1,13 +1,11 @@
 import json
 import requests
 from requests import Response
-from dotenv import dotenv_values
-
-ENV = dotenv_values('.env')
+from src.env.env import ENV
 
 class TournamentClient:
     def __init__(self, requestor: requests = requests) -> None:
-        self.path = f"http://{ ENV['HOST'] }:{ ENV['PORT'] }"
+        self.path = f"{ ENV['API_PATH'] }"
         self.http_request = requestor
 
     def get_data(self, endpoint: str) -> Response.content:
