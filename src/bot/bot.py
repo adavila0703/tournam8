@@ -1,5 +1,5 @@
 from discord.ext.commands import Bot
-from src.env.env import ENV
+from src.dotenv.dotenv import ENV
 from src.commands.tournament_commands import TournamentCommander
 
 

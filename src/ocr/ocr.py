@@ -1,7 +1,7 @@
 import pytesseract
 import cv2
 from src.ocr.placements import PLACEMENTS as placements
-from src.env.env import ENV
+from src.dotenv.dotenv import ENV
 
 pytesseract.pytesseract.tesseract_cmd = ENV['OCR_ENGINE_PATH']
 

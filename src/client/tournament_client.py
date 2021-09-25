@@ -1,7 +1,7 @@
 import json
 import requests
 from requests import Response
-from src.env.env import ENV
+from src.dotenv.dotenv import ENV
 
 class TournamentClient:
     def __init__(self, requestor: requests = requests) -> None:
