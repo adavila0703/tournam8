@@ -3,7 +3,7 @@ from discord.ext.commands import Context
 import src.utils.logger as Logger
 from src.utils.reactions import REACTIONS
 from discord.ext import commands
-from src.utils.string_type import STRING_TYPE
+from src.utils.string_type import StringType
 
 class TournamentCommander(commands.Cog):
     def __init__(
@@ -67,7 +67,7 @@ class TournamentCommander(commands.Cog):
         tournaments = self.tournament_state.show_tournament_list()
         for index, id in enumerate(tournaments):
             tournament = tournaments[id]
-            await self.logger.message_to_channel(ctx, self.string_constructor(index + 1, tournament, STRING_TYPE['LIST']), None)
+            await self.logger.message_to_channel(ctx, self.string_constructor(index + 1, tournament, StringType.LIST), None)
         return tournaments
 
     @commands.command()
@@ -77,7 +77,7 @@ class TournamentCommander(commands.Cog):
         uuid: str
     ) -> Context.send:
         tournament = self.tournament_state.show_tournament(uuid)
-        await self.logger.message_to_channel(ctx, self.string_constructor(None, tournament, STRING_TYPE['SINGLE']), None)
+        await self.logger.message_to_channel(ctx, self.string_constructor(None, tournament, StringType.SINGLE), None)
         return tournament
 
     
@@ -89,12 +89,12 @@ class TournamentCommander(commands.Cog):
     ) -> str:
         status = 'Started' if tournament['status'] == True else 'Not Started'
         
-        if type == STRING_TYPE['LIST']:
+        if type == StringType.LIST:
             return f"{index}. Tournament Id: {tournament['id']}\
             \nName: {tournament['name']}\
             \nStatus: {status}"
 
-        elif type == STRING_TYPE['SINGLE']:
+        elif type == StringType.SINGLE:
             return f"Tournament Id: {tournament['id']}\
             \nName: {tournament['name']}\
             \nStatus: {status}\
