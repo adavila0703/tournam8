@@ -1,13 +1,11 @@
 
 from discord import Message
-from discord.channel import TextChannel
 from src.ocr.ocr import ocr
 import os
 from src.state.tournament_state import TOURNAMENT_STATE, TournamentState
 from discord.ext import commands
-from src.utils.status import MESSAGE_STATUS as STATUS
+from src.utils.status import MessageStatus
 from src.utils import logger
-from src.ocr import ocr
 
 class MessageCoordinator(commands.Cog):
     def __init__(
@@ -26,15 +24,12 @@ class MessageCoordinator(commands.Cog):
     async def on_message(self, message: Message):
         """Event which handles reading the screenshot information"""
         if message.author == self.bot.user:
-            status = STATUS['BOT_MESSAGE']
-            await self.logger.message_to_channel(message.channel, status, None)
-            return status
+            return MessageStatus.BOT_MESSAGE
 
-        await self.bot.process_commands(message)
         if message.attachments == []:
-            status = STATUS['BOT_MESSAGE']
-            await self.logger.message_to_channel(message.channel, status, None)
-            return STATUS['NO_ATTACHMENTS']
+            status = MessageStatus.NO_ATTACHMENTS
+            print(status)
+            return status
 
         channel = message.channel
 
@@ -43,8 +38,8 @@ class MessageCoordinator(commands.Cog):
         tournament_id = category[len(category) - 1]
 
         if not self.tournament_state.valid_tournament_player(tournament_id, user):
-            status = STATUS['TOURNAMENT_OR_PLAYER_NOT_VALID']
-            await self.logger.message_to_channel(message.channel, status, None)
+            status = MessageStatus.TOURNAMENT_OR_PLAYER_NOT_VALID
+            print(status)
             return status
         
         path = './' + user + '.png'
@@ -63,6 +58,6 @@ class MessageCoordinator(commands.Cog):
         
         self.tournament_state.record_player_stats(tournament_id, user, stats)
         await channel.send(f'User: {user} Game Stats: {stats}')
-        status = STATUS['PLAYER_STATS_RECORDED']
-        await self.logger.message_to_channel(message.channel, status, None)
+        status = MessageStatus.PLAYER_STATS_RECORDED
+        print(status)
         return status

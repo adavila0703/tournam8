@@ -1,7 +1,9 @@
 from asyncio import Future
+from src.tests.future_creator import future_creator
 from unittest.mock import Mock
 import pytest
 from src.state.tournament_state import TournamentState
+from src.utils.status import TournamentStatus
 
 
 uuid = Mock()
@@ -11,10 +13,8 @@ good_status = Mock()
 bad_status = Mock()
 ctx_mock = Mock()
 start_up_mock = Mock()
-future = Future()
-future.set_result('')
 
-start_up_mock.return_value = future
+start_up_mock.return_value = future_creator('')
 
 good_status.status_code = 200
 bad_status.status_code = 400
@@ -42,7 +42,7 @@ def pytest_reset_mocks():
 def test_create_tournament():
     happy = tournament_state_happy.create_tournament('name')
     assert happy == {
-        'TOURNAMENT_CREATED': {
+        TournamentStatus.TOURNAMENT_CREATED: {
             'id': '123-321', 
             'name': 'name', 
             'status': False, 
@@ -52,21 +52,21 @@ def test_create_tournament():
             'channel_name': 'name_123-321'
             }
         }
-    client_happy.send_data.assert_called_with('/create_tournament', happy['TOURNAMENT_CREATED'], 'create_tournament')
+    client_happy.send_data.assert_called_with('/create_tournament', happy[TournamentStatus.TOURNAMENT_CREATED], 'create_tournament')
 
     sad = tournament_state_sad.create_tournament('name')
-    assert sad == 'ERROR_STATUS_CODE'
+    assert sad == TournamentStatus.ERROR_STATUS_CODE
 
 # writing this realizing we weren't doing a check if the id exists
 def test_delete_tournament():
     happy = tournament_state_happy.delete_tournament('id')
-    assert happy == {'TOURNAMENT_DELETED': 'id'}
+    assert happy == { TournamentStatus.TOURNAMENT_DELETED: 'id' }
     # TODO: Assertion error in test
     # labels: Tests
     # client_happy.send_data.assert_called_with('/create_tournament', { 'id': 'id' }, 'create_tournament')
 
     sad = tournament_state_sad.delete_tournament('id')
-    assert sad == 'ERROR_STATUS_CODE'
+    assert sad == TournamentStatus.ERROR_STATUS_CODE
 
 def test_get_all_tournaments():
     happy = tournament_state_happy.get_all_tournaments()
@@ -85,7 +85,7 @@ def test_get_all_tournaments():
     client_happy.get_data.assert_called_with('/get_all_tournaments')
 
     sad = tournament_state_sad.get_all_tournaments()
-    assert sad == 'ERROR_STATUS_CODE'
+    assert sad == {}
 
 def test_show_tournament_list():
     happy = tournament_state_happy.show_tournament_list()
@@ -118,26 +118,27 @@ def test_show_tournament():
 @pytest.mark.asyncio
 async def test_start_signups():
     status = await tournament_state_happy.start_signups(ctx_mock, '123-321', 'rection')
-    assert status == 'SIGNUPS_STARTED'
+    assert status == TournamentStatus.SIGNUPS_STARTED
 
 def test_start_tournament():
     happy = tournament_state_happy.start_tournament('123-321')
-    assert happy == 'TOURNAMENT_STARTED'
+    assert happy == TournamentStatus.TOURNAMENT_STARTED
 
     sad = tournament_state_sad.start_tournament('123-321')
-    assert sad == 'ERROR_STATUS_CODE'
+    assert sad == TournamentStatus.TOURNAMENT_NOT_FOUND
 
 def test_player_signed_up():
     happy = tournament_state_happy.player_signed_up('123-321', 'player')
-    assert happy == 'PLAYER_SIGNED_UP'
+    assert happy == TournamentStatus.PLAYER_SIGNED_UP
 
-    sad = tournament_state_sad.start_tournament('123-321')
-    assert sad == 'ERROR_STATUS_CODE'
+    sad = tournament_state_sad.player_signed_up('123-321', 'player')
+    assert sad == TournamentStatus.ERROR_STATUS_CODE
 
 # TODO: Tournament state reset
 # labels: Tests
 # State is retaining during this test, implement a way to reset the state after each test.
 def test_valid_tournament_player():
+    print(tournament_state_happy.tournaments)
     check_all = tournament_state_happy.valid_tournament_player('123-321', 'player')
     check_player = tournament_state_happy.valid_tournament_player('123-321', 'other_player')
 
@@ -154,8 +155,7 @@ def test_valid_tournament_player():
 
 def test_record_player_stats():
     happy = tournament_state_happy.record_player_stats('123-321', 'player', [1, 2, 3])
-    print(happy)
     assert happy == {'player': {'1': [1, 2, 3]}}
 
     sad = tournament_state_sad.record_player_stats('123-321', 'player', [1, 2, 3])
-    assert sad == 'ERROR_STATUS_CODE'
+    assert sad == TournamentStatus.ERROR_STATUS_CODE
