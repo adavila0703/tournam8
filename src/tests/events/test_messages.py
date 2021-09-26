@@ -1,10 +1,8 @@
-from discord import channel, message
-from discord.ext.commands.errors import BotMissingAnyRole
 from src.events.messages import MessageCoordinator
 from unittest.mock import Mock
 import pytest
 from src.tests.future_creator import future_creator
-from src.utils.status import MESSAGE_STATUS as STATUS
+from src.utils.status import MessageStatus
 
 # TODO Mocks require cleanup
 # labels: tests
@@ -36,7 +34,7 @@ async def test_on_message_bot_message():
     "Tests if the incoming message is equal to a bot"
     message_mock.author = 'bot'
     result = await coordinator.on_message(message_mock)
-    assert result == STATUS['BOT_MESSAGE']
+    assert result == MessageStatus.BOT_MESSAGE
 
 @pytest.mark.asyncio
 async def test_on_message_no_attachments():
@@ -44,7 +42,7 @@ async def test_on_message_no_attachments():
     message_mock.attachments = []
     message_mock.author = 'TestUser#1'
     result = await coordinator.on_message(message_mock)
-    assert result == STATUS['NO_ATTACHMENTS']
+    assert result == MessageStatus.NO_ATTACHMENTS
 
 @pytest.mark.asyncio
 async def test_on_message_valid_tournament():
@@ -57,7 +55,7 @@ async def test_on_message_valid_tournament():
         'test'
     ]
     result = await coordinator.on_message(message_mock)
-    assert result == STATUS['TOURNAMENT_OR_PLAYER_NOT_VALID']
+    assert result == MessageStatus.TOURNAMENT_OR_PLAYER_NOT_VALID
 
 @pytest.mark.asyncio
 async def test_on_message_success():
@@ -72,5 +70,5 @@ async def test_on_message_success():
         message_mock
     ]
     result = await coordinator.on_message(message_mock)
-    assert result == STATUS['PLAYER_STATS_RECORDED']
+    assert result == MessageStatus.PLAYER_STATS_RECORDED
 

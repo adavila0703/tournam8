@@ -1,3 +1,4 @@
+
 from enum import Enum, unique
 
 @unique
@@ -10,9 +11,5 @@ class TournamentStatus(Enum):
     ERROR_STATUS_CODE = 'ERROR_STATUS_CODE'
     TOURNAMENT_NOT_FOUND = 'TOURNAMENT_NOT_FOUND'
 
-@unique
-class MessageStatus(Enum):
-    BOT_MESSAGE = 'BOT_MESSAGE'
-    NO_ATTACHMENTS = 'NO_ATTACHMENTS'
-    TOURNAMENT_OR_PLAYER_NOT_VALID = 'TOURNAMENT_OR_PLAYER_NOT_VALID'
-    PLAYER_STATS_RECORDED = 'PLAYER_STATS_RECORDED'
+
+print({ TournamentStatus.ERROR_STATUS_CODE: 'id'})
