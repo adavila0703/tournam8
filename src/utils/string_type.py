@@ -1,4 +1,5 @@
-STRING_TYPE = {
-    'LIST': 'LIST',
-    'SINGLE': 'SINGLE'
-}
+from enum import Enum
+
+class StringType(Enum):
+    LIST ='LIST'
+    SINGLE = 'SINGLE'

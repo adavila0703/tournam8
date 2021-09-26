@@ -1,5 +1,4 @@
 from discord.ext.commands import Context
-from discord.ext import commands
 
 class UserCommander():
     def __init__(
