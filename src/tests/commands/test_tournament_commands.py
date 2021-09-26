@@ -59,4 +59,3 @@ async def test_start_signups():
     tournament_state_mock.start_signups.return_value = future
     await commander.start_signups(commander, ctx_mock, uuid_mock)
     logger_mock.message_to_channel.assert_called_with(ctx_mock, test_tournament, None)
-

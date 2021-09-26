@@ -1,4 +1,3 @@
-from discord.ext.commands.core import command
 from src.commands.user_commands import UserCommander
 from unittest.mock import Mock
 import pytest
@@ -9,4 +8,4 @@ commander = UserCommander(bot_mock)
 
 @pytest.mark.asyncio
 async def test_get_stats():
-    await commander.get_stats(command, ctx_mock)
+    await commander.get_stats(commander, ctx_mock)

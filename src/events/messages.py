@@ -4,27 +4,32 @@ from src.ocr.ocr import ocr
 import os
 from src.state.tournament_state import TOURNAMENT_STATE, TournamentState
 from discord.ext import commands
-from src.utils.status import MESSAGE_STATUS as STATUS
+from src.utils.status import MessageStatus
+from src.utils import logger
 
 class MessageCoordinator(commands.Cog):
     def __init__(
         self,
         bot,
-        tournament_state: TournamentState = TOURNAMENT_STATE
+        tournament_state: TournamentState = TOURNAMENT_STATE,
+        log: logger = logger,
+        ocr = ocr
     ) -> None:
         self.bot = bot
         self.tournament_state = tournament_state
+        self.logger = log
+        self.ocr = ocr
 
     @commands.Cog.listener()
     async def on_message(self, message: Message):
         """Event which handles reading the screenshot information"""
         if message.author == self.bot.user:
-            return STATUS['BOT_MESSAGE']
+            return MessageStatus.BOT_MESSAGE
 
-        await self.bot.process_commands(message)
-        print(message.attachments)
         if message.attachments == []:
-            return STATUS['NO_ATTACHMENTS']
+            status = MessageStatus.NO_ATTACHMENTS
+            print(status)
+            return status
 
         channel = message.channel
 
@@ -33,7 +38,9 @@ class MessageCoordinator(commands.Cog):
         tournament_id = category[len(category) - 1]
 
         if not self.tournament_state.valid_tournament_player(tournament_id, user):
-            return STATUS['TOURNAMENT_OR_PLAYER_NOT_VALID']
+            status = MessageStatus.TOURNAMENT_OR_PLAYER_NOT_VALID
+            print(status)
+            return status
         
         path = './' + user + '.png'
 
@@ -45,10 +52,12 @@ class MessageCoordinator(commands.Cog):
         # TODO In memory image instead of disk
         # Instead of saving the image to the disk, we could keep it in memory using numpy
             await message.attachments[0].save(path)
-            stats = ocr(path)
+            stats = self.ocr(path)
             file.close()
             os.remove(path)
         
         self.tournament_state.record_player_stats(tournament_id, user, stats)
         await channel.send(f'User: {user} Game Stats: {stats}')
-        return STATUS['PLAYER_STATS_RECORDED']
+        status = MessageStatus.PLAYER_STATS_RECORDED
+        print(status)
+        return status
