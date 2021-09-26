@@ -8,4 +8,4 @@ commander = UserCommander(bot_mock)
 
 @pytest.mark.asyncio
 async def test_get_stats():
-    await commander.get_stats(commander, ctx_mock)
+    await commander.get_stats(ctx_mock)
