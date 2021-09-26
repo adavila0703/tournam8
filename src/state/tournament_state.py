@@ -89,18 +89,21 @@ class TournamentState:
 
     def start_tournament(self, id: str) -> STATUS:
         """Sets tournament stats to True and sets the signed up players to the active list"""
-        response, content = self.client.get_data('/')
-        
-        if response.status_code != 200:
-            return STATUS['ERROR_STATUS_CODE']
+        # TODO Create method to check of if tournament exists
+        # labels: quick, state, duplicate
+        # This is code duplication, create a method for this
+        if (tournament := self.tournaments.get(id)) == None:
+            return STATUS['TOURNAMENT_NOT_FOUND']
 
-        tournament = self.tournaments[id]
-        tournament['status'] = True
-        tournament['players_attended'] = tournament['players_signed_up']
+        if tournament['status'] == False:
+            response = self.client.send_data('/start_tournament', { 'id': tournament['id'], 'tournament': tournament }, 'start_tournament')
+            
+            if response.status_code != 200:
+                return STATUS['ERROR_STATUS_CODE']
 
-        response = self.client.send_data('/start_tournament', { 'id': tournament['id'], 'tournament': tournament }, 'start_tournament')
-
-
+            tournament['status'] = True
+            tournament['players_attended'] = tournament['players_signed_up']
+ 
         return STATUS['TOURNAMENT_STARTED']
 
     def player_signed_up(self, id, player):
