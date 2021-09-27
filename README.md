@@ -1,68 +1,41 @@
 # tournam8
 
- ![](pics/tournam8-logo.png) 
+ ![tournam8](pics/tournam8-logo.png)
 
-#### Read more about how this idea saves $21,504 per year in manual processing [here](https://www.slixites.com/blog/we-built-a-discord-bot-that-saves-usd21-504-per-year).
+## Overview
 
+> Tournam8 is a Discord bot set out to automate an entire tournament process for your favorite video games.
 
+## Motivation
 
+Tournam8's development was motivated after I was exposed to the tournament process of a small community of passionate Spellbreak players struggling to orchestate a complex system over Discord.
 
+During a tournament, players are instructed to take a screen shot of their scores after a game and post them in a Discord text channel where a team of people would work hard to move the data to an excel sheet.
 
-# Short Version
+To put that in perspective, there are about 40 players in a game and 6 games per tournament. That's 240 screen shots per tournament, with about 3 tournaments a month, thats 720 screen shots a month, and over 8000 a year.
 
-> A discord bot that is equipped with an OCR, custom functions and uses an API to send and retrieve data!
+Among other features, one of the major features of Tournam8 is to completely automate the process of reading data from a screen shot using an OCR.
 
+![Example](pics/ocr-example-1.gif)
 
-# Long Version
+## API
 
-Tournam8 is a [Discord](https://en.wikipedia.org/wiki/Discord_(software)) bot that was built specific for Element, a tournament organization which hosts tournaments for video game called Spellbreak.
+Tournam8's backend API can be found here. [Here](https://github.com/adavila0703/tournam8-api)
 
-During a tournament, players are instructed to take a screenshot of their scores after a game and post them in a Discord text channel. Staff members then record all of the player statistics to a spreadsheet. 
+## Tech Stack
 
-To give you more perspective on whats that like. There are about 40 players in a game and there are 6 games played per tournament. That's 240 screenshots per tournament and at an average of 6 characters per screenshots, that around 1440 characters that need to be transferred to an excel sheet.
+* Discord
 
+* FastAPI
 
+* MongoDB
 
-![](pics/logo-element.png)
-***Element Logo***
+* Discord development API
 
-Here is an example of the OCR. The system extracts the data from a screenshot and sends the information to a database through an my API.
+## Contributions
 
+This project is completely opensource and contribution documentation is currenlty being worked on.
 
-![](pics/ocr-example-1.gif)
+## Warning
 
-
-# API
-
-The API used for the data transfer can be found [Here](https://github.com/adavila0703/elements-API)
-
-### Request Example
-```cpp
-{
-    "data":
-    {
-        "type": "record",
-        "attributes": {
-            "kills": 15,
-            "damage": 1500,
-            "place": 1,
-            "assists": 3,
-            "username": "marley-ee",
-            "game": "Game 1",
-            "discord_id": 256486795486897624,
-            "scrimy_name": null,
-            "tourny_name": "Element 1",
-            "qualy_name": null
-
-        }
-    }
-}
-```
-
-
-# Technologies
-
-| Language | VPS            | API                                | Platform | OCR                         | Imaging |
-|----------|----------------|------------------------------------|----------|-----------------------------|---------|
-| Python   | Vultr (Ubuntu) | Flask / SQLAlchemy / Rest JSON API | Discord  | Tesseract OCR / Pytesseract | OpenCV  |
-
+Discord.py is the Python library which is used in Tournam8 to communicate to the Discord API. This library is no longer being supported, which means there might either be a change to the projects dependencies or a version of Discord.py will be forked to keep this project up to date with the newest Discord features.
