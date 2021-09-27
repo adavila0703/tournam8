@@ -1,18 +1,32 @@
 import pytesseract
 import cv2
 from src.ocr.placements import PLACEMENTS as placements
-from src.vars.vars import ENV
+from src.vars.vars import Env
 
-pytesseract.pytesseract.tesseract_cmd = ENV['OCR_ENGINE_PATH']
+pytesseract.pytesseract.tesseract_cmd = Env.OCR_ENGINE_PATH.value
 
-# TODO Magic numbers in OCR
-# labels: ocr
-# Move these magic numbers to an enviornment variable
 def ocr(path: str) -> dict:
     """Reads image of the incoming author"""
-    image = cv2.imread(path, 0)
-    threshold = cv2.threshold(image, 150, 255, cv2.THRESH_BINARY_INV)[1]
-    stats = stat_parser(pytesseract.image_to_string(threshold, lang='eng', config='--psm 12', nice=1).split())
+    image = cv2.imread(
+        path, 
+        Env.IMREAD_FLAG.value
+    )
+
+    threshold = cv2.threshold(
+        image, 
+        Env.THRESHOLD_VALUE.value, 
+        Env.MAX_VALUE.value, 
+        cv2.THRESH_BINARY_INV
+    )[1]
+
+    stats = stat_parser(
+        pytesseract.image_to_string(
+            threshold, 
+            lang=Env.OCR_LANGUAGE.value, 
+            config=Env.OCR_CONFIG.value, 
+            nice=Env.OCR_PROC_PRIORITY
+        ).split()
+    )
     return stats
 
 def stat_parser(ocr_data: list) -> list:

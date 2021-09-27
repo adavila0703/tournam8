@@ -1,5 +1,5 @@
 from discord.ext.commands import Bot
-from src.vars.vars import ENV
+from src.vars.vars import Env
 from src.commands.tournament_commands import TournamentCommander
 from src.events.messages import MessageCoordinator
 
@@ -12,5 +12,5 @@ BOT.remove_command('help')
 
 def run_bot():
     """Configs and runs discord bot"""
-    BOT.run(ENV['DISCORD_TOKEN'])
+    BOT.run(Env.DISCORD_TOKEN.value)
 

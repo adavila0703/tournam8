@@ -1,4 +1,5 @@
 import asyncio
+from src.tests.future_creator import future_creator
 
 class DiscordUtilsMock:
     def __init__(self) -> None:
@@ -13,7 +14,5 @@ class DiscordUtilsMock:
             self.members = ['player1', 'player2']
 
         def delete(self):
-            future = asyncio.Future()
-            future.set_result('good')
             self.channels.clear()
-            return future
+            return future_creator('good')
