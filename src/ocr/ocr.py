@@ -24,7 +24,7 @@ def ocr(path: str) -> dict:
             threshold, 
             lang=Env.OCR_LANGUAGE.value, 
             config=Env.OCR_CONFIG.value, 
-            nice=Env.OCR_PROC_PRIORITY
+            nice=Env.OCR_PROC_PRIORITY.value
         ).split()
     )
     return stats
