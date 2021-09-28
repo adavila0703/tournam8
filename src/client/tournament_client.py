@@ -8,8 +8,8 @@ class TournamentClient:
         self.path = Env.API_PATH.value
         self.http_request = requestor
 
-    def get_data(self, endpoint: str) -> Response.content:
-        response = self.http_request.get(self.path + endpoint)
+    def get_data(self, endpoint: str, params: dict) -> Response.content:
+        response = self.http_request.get(self.path + endpoint, params=params)
         content = json.loads(response.content)
         return response, content
 

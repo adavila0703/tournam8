@@ -24,7 +24,7 @@ class TournamentCommander(commands.Cog):
         name: str
     ) -> Context.send:
         """Creates a tournament"""
-        status = self.tournament_state.create_tournament(name)
+        status = self.tournament_state.create_tournament(name, ctx.guild.id)
         await self.logger.message_to_channel(ctx, status, None)
         return status
 
