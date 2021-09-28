@@ -1,4 +1,5 @@
 import asyncio
+from src.tests.future_creator import future_creator
 class TournamentStateMock:
     def __init__(self) -> None:
         self.tournaments = []
@@ -30,6 +31,4 @@ class TournamentStateMock:
 
     def start_signups(self, ctx, id, reactions):
         self.signups = True
-        future = asyncio.Future()
-        future.set_result('completed')
-        return future
+        return future_creator('completed')

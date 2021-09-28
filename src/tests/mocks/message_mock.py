@@ -1,10 +1,9 @@
 import asyncio
+from src.tests.future_creator import future_creator
 
 class MessageMock:
     def __init__(self) -> None:
         pass
 
     def add_reaction(self, reaction):
-        future = asyncio.Future()
-        future.set_result(reaction)
-        return future
+        return future_creator(reaction)

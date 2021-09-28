@@ -38,5 +38,13 @@ jobs:
         coverage xml
       env:
         API_PATH: ${{ secrets.API_PATH }}
+        OCR_ENGINE_PATH: ${{ secrets.OCR_ENGINE_PATH }}
+        DISCORD_TOKEN: ${{ secrets.DISCORD_TOKEN }}
+        THRESHOLD_VALUE: ${{ secrets.THRESHOLD_VALUE }}
+        MAX_VALUE: ${{ secrets.MAX_VALUE }}
+        IMREAD_FLAG: ${{ secrets.IMREAD_FLAG }}
+        OCR_LANGUAGE: ${{ secrets.OCR_LANGUAGE }}
+        OCR_CONFIG: ${{ secrets.OCR_CONFIG }}
+        OCR_PROC_PRIORITY: ${{ secrets.OCR_PROC_PRIORITY }}
     - name: Upload coverage to Codecov
       uses: codecov/codecov-action@v2

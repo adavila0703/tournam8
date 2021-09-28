@@ -1,11 +1,11 @@
 import json
 import requests
 from requests import Response
-from src.vars.vars import ENV
+from src.vars.vars import Env
 
 class TournamentClient:
     def __init__(self, requestor: requests = requests) -> None:
-        self.path = f"{ ENV['API_PATH'] }"
+        self.path = Env.API_PATH.value
         self.http_request = requestor
 
     def get_data(self, endpoint: str) -> Response.content:

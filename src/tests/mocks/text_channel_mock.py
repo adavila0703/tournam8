@@ -1,5 +1,6 @@
 import asyncio
 from src.tests.mocks.message_mock import MessageMock
+from src.tests.future_creator import future_creator
 
 class TextChannelMock:
     def __init__(self, name) -> None:
@@ -10,6 +11,4 @@ class TextChannelMock:
         return self.name
 
     def send(self, message):
-        future = asyncio.Future()
-        future.set_result(self.message)
-        return future
+        return future_creator(message)
