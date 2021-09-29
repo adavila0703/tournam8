@@ -4,16 +4,27 @@ from requests import Response
 from src.vars.vars import Env
 
 class TournamentClient:
-    def __init__(self, requestor: requests = requests) -> None:
-        self.path = Env.API_PATH.value
+    def __init__(
+        self, 
+        requestor: requests = requests
+    ) -> None:
+        self.path = Env.API_PATH
         self.http_request = requestor
 
-    def get_data(self, endpoint: str) -> Response.content:
+    def get_data(
+        self, 
+        endpoint: str
+    ) -> Response.content:
         response = self.http_request.get(self.path + endpoint)
         content = json.loads(response.content)
         return response, content
 
-    def send_data(self, endpoint: str, body: dict, type: str) -> Response:
+    def send_data(
+        self,
+        endpoint: str,
+        body: dict,
+        type: str
+    ) -> Response:
         json_body = json.dumps(body)
         response = self.http_request.post(self.path + endpoint, json_body)
         print(f'Request Type: { type }, Status Code: { response.status_code }')

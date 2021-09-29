@@ -3,28 +3,30 @@ import cv2
 from src.ocr.placements import PLACEMENTS as placements
 from src.vars.vars import Env
 
-pytesseract.pytesseract.tesseract_cmd = Env.OCR_ENGINE_PATH.value
+pytesseract.pytesseract.tesseract_cmd = Env.OCR_ENGINE_PATH
 
-def ocr(path: str) -> dict:
+def ocr(
+    path: str
+) -> dict:
     """Reads image of the incoming author"""
     image = cv2.imread(
         path, 
-        Env.IMREAD_FLAG.value
+        Env.IMREAD_FLAG
     )
 
     threshold = cv2.threshold(
         image, 
-        Env.THRESHOLD_VALUE.value, 
-        Env.MAX_VALUE.value, 
+        Env.THRESHOLD_VALUE, 
+        Env.MAX_VALUE, 
         cv2.THRESH_BINARY_INV
     )[1]
 
     stats = stat_parser(
         pytesseract.image_to_string(
             threshold, 
-            lang=Env.OCR_LANGUAGE.value, 
-            config=Env.OCR_CONFIG.value, 
-            nice=Env.OCR_PROC_PRIORITY.value
+            lang=Env.OCR_LANGUAGE, 
+            config=Env.OCR_CONFIG, 
+            nice=Env.OCR_PROC_PRIORITY
         ).split()
     )
     return stats

@@ -1,6 +1,5 @@
 
 from discord import Message
-from discord.message import Attachment
 from src.ocr.ocr import ocr
 import os
 from src.state.tournament_state import TOURNAMENT_STATE, TournamentState
