@@ -6,6 +6,8 @@ omit =
     *__init__.py
     */test*
     */archive/
+    */logger.py
+    */ocr.py
 
 source = /src
     
@@ -15,3 +17,6 @@ omit =
     *__init__.py
     */test*
     */archive/
+    */ready.py
+    */logger.py
+    */ocr.py
