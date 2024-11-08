@@ -23,7 +23,7 @@ pytesseract==0.3.8
 pytest==6.2.5
 pytest-asyncio==0.15.1
 python-dotenv==0.19.0
-requests==2.31.0
+requests==2.32.2
 toml==0.10.2
 typing-extensions==3.10.0.2
 urllib3==1.26.18
